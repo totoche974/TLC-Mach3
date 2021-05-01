@@ -21,8 +21,8 @@ void manivelle(uint8_t newkey)
      if (MAN.codRotIncrement < 0)
     {
       //if (digitalRead(Pin_Ctrl) == LOW)
-      //if (Keyboard.press(128) || Keyboard.press(132) || tmpBtState)
-      if (Keyboard.press(128) || Keyboard.press(132))
+      if (Keyboard.press(128) || Keyboard.press(132) && tmpBtState)
+      //if (Keyboard.press(128) || Keyboard.press(132))
       { // Touche Ctrl à droite ou à gauche
         //Keyboard.press(128);
         printf("MAN.codRotIncrement < 0\n");
@@ -36,8 +36,8 @@ void manivelle(uint8_t newkey)
   if (MAN.codRotIncrement > 0)
   {
     //if (digitalRead(Pin_Ctrl) == LOW)
-    //if (Keyboard.press(128) || Keyboard.press(132) || tmpBtState)
-    if (Keyboard.press(128) || Keyboard.press(132))
+    if (Keyboard.press(128) || Keyboard.press(132) && tmpBtState)
+    //if (Keyboard.press(128) || Keyboard.press(132))
     { // Touche Ctrl à droite ou à gauche
       //{
       //Keyboard.press(128);
