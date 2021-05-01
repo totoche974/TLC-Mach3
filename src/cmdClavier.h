@@ -7,6 +7,11 @@
 //typedef struct Bouton Bouton;
 struct Bouton
 {
+    /**
+     * @note Ajout de resistance de 10K pour passer les
+     * pins 34 et 35 en PULLUP
+     * 
+     */
     uint8_t Axe_X = 34; // 19; // GPIO34
     uint8_t Axe_Y = 35; // 20; // GPIO35
     uint8_t Axe_Z = 32; // 21; // GPIO32
@@ -14,14 +19,15 @@ struct Bouton
     //uint8_t Secu  = 3;
 };
 
-const uint8_t ARRET_BT = 25; // GPIO25
-const uint8_t PAUSE_BT = 26; // GPIO26
-const uint8_t START_BT = 27; // GPIO27
+const uint8_t ARRET_BT = 25; // GPIO25 - BT tester = OK
+const uint8_t PAUSE_BT = 26; // GPIO26 - BT tester = OK
+const uint8_t START_BT = 27; // GPIO27 - BT tester = OK
 
 //typedef struct Manivelle Manivelle;
 struct Manivelle
-{
-    uint8_t CodRotA = 19; // S2
+{   
+    
+    uint8_t CodRotA = 19; // S2 
     uint8_t CodRotB = 18; // S1
     uint8_t changeAxe;
     uint8_t changeAxe1;
