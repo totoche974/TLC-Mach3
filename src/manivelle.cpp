@@ -9,10 +9,14 @@ extern Bouton bouton;
 
 AiEsp32RotaryEncoder Encoder = AiEsp32RotaryEncoder(MAN.CodRotA, MAN.CodRotB, MAN.inter);
 
+
+
 void manivelle(uint8_t newkey)
 {
+//if (digitalRead(bouton.BT_SECU) == LOW) { printf("Boutton BT_SECU - OK\n");
+     
 
-  bool tmpBtState = digitalRead(TMP_BT);
+  //bool tmpBtState = digitalRead(TMP_BT);
 
   MAN.codRotIncrement = Encoder.readEncoder() / 4; // Génère 4 impulsions (https://www.logre.eu/wiki/Codeur_rotatif_incrémental)
 
@@ -20,8 +24,8 @@ void manivelle(uint8_t newkey)
      { // Changement de MS affiché
      if (MAN.codRotIncrement < 0)
     {
-      //if (digitalRead(Pin_Ctrl) == LOW)
-      if (Keyboard.press(128) || Keyboard.press(132) && tmpBtState)
+      if (digitalRead(bouton.BT_SECU) == LOW)
+      //if (Keyboard.press(128) || Keyboard.press(132) && tmpBtState)
       //if (Keyboard.press(128) || Keyboard.press(132))
       { // Touche Ctrl à droite ou à gauche
         //Keyboard.press(128);
@@ -33,10 +37,10 @@ void manivelle(uint8_t newkey)
     }
   }
 
-  if (MAN.codRotIncrement > 0)
+  if (MAN.codRotIncrement > 0) 
   {
-    //if (digitalRead(Pin_Ctrl) == LOW)
-    if (Keyboard.press(128) || Keyboard.press(132) && tmpBtState)
+    //if (digitalRead(bouton.BT_SECU) == LOW)
+    //if (Keyboard.press(128) || Keyboard.press(132) && tmpBtState)
     //if (Keyboard.press(128) || Keyboard.press(132))
     { // Touche Ctrl à droite ou à gauche
       //{
@@ -52,25 +56,23 @@ void manivelle(uint8_t newkey)
   }                          // end coderot
 
   
-  if (digitalRead(bouton.Axe_X) == LOW) {
+
+  if (digitalRead(bouton.Axe_X) == LOW ) {
      printf("Axe_X\n");
      MAN.changeAxe = KEY_LEFT_ARROW;
      MAN.changeAxe1 = KEY_RIGHT_ARROW;
-     //X  Serial.println("Axe X ");
-    }
+     }
 
   if (digitalRead(bouton.Axe_Y) == LOW) {
      printf("Axe_Y\n");
      MAN.changeAxe = KEY_UP_ARROW;
      MAN.changeAxe1 = KEY_DOWN_ARROW;
-     //Serial.println("Axe Y ");
     }
 
   if (digitalRead(bouton.Axe_Z) == LOW) {
      printf("Axe_Z\n");
      MAN.changeAxe = KEY_PAGE_UP;    //211
      MAN.changeAxe1 = KEY_PAGE_DOWN; //214
-     //  Serial.println("Axe Z ");
     }
 
   if (digitalRead(bouton.Axe_A) == LOW) {
@@ -79,8 +81,10 @@ void manivelle(uint8_t newkey)
      MAN.changeAxe1 = KEY_END;
      //  Serial.println("Axe A ");
     }
+  //}  
   printf("\n");
   delay(1000);
+//} fin du if du  BT_SECU
 }
 
 void OnOff()

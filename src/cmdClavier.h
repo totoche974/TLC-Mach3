@@ -5,23 +5,30 @@
 #pragma once
 
 //typedef struct Bouton Bouton;
+
+const uint8_t TMP_BT = 39; // GPIO39
+
 struct Bouton
 {
     /**
      * @note Ajout de resistance de 10K pour passer les
      * pins 34 et 35 en PULLUP
      * 
+     * Obligation d'appuyer sur le bouton (BT_SECU) pour pouvoir utiliser la manivelle  
      */
-    uint8_t Axe_X = 34; // 19; // GPIO34
-    uint8_t Axe_Y = 35; // 20; // GPIO35
-    uint8_t Axe_Z = 32; // 21; // GPIO32
-    uint8_t Axe_A = 33; // 22; // GPIO33
+
+    bool BT_SECU = 14;  // pin 26 - GPIO14
+
+    uint8_t Axe_X = 34; // pin 19 - GPIO34 - BT tester = OK
+    uint8_t Axe_Y = 35; // pin 20 - GPIO35 - BT tester = OK
+    uint8_t Axe_Z = 32; // pin 21 - GPIO32 - BT tester = OK
+    uint8_t Axe_A = 33; // pin 22 - GPIO33 - BT tester = OK
     //uint8_t Secu  = 3;
 };
 
-const uint8_t ARRET_BT = 25; // GPIO25 - BT tester = OK
-const uint8_t PAUSE_BT = 26; // GPIO26 - BT tester = OK
-const uint8_t START_BT = 27; // GPIO27 - BT tester = OK
+const uint8_t ARRET_BT = 25; //pin 23 - GPIO25 - BT tester = OK
+const uint8_t PAUSE_BT = 26; //pin 24 - GPIO26 - BT tester = OK
+const uint8_t START_BT = 27; //pin 25 - GPIO27 - BT tester = OK
 
 //typedef struct Manivelle Manivelle;
 struct Manivelle
@@ -43,7 +50,7 @@ struct Manivelle
 
 //typedef struct Clavier Clavier;
 
-const uint8_t TMP_BT = 39; // GPIO39
+
 
 struct Clavier
 {
@@ -60,7 +67,7 @@ struct Clavier
     // unsigned int anti_rebond = 50; //5 ms
 };
 
-const byte ROWS = 4; //5 lignes
+const byte ROWS = 4; //4 lignes
 const byte COLS = 4; //4 colonnes
 
 const unsigned antiRebond = 10;

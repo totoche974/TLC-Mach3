@@ -90,7 +90,7 @@ Manivelle MAN;
 Clavier C;
 // Mach3 M3;
 
-#define Pin_Ctrl 28
+//#define Pin_Ctrl 28
 
 bool flag = true; // Flag de securité clavier
 //const uint8_t led = 2;
@@ -104,7 +104,7 @@ void setup()
   Serial.begin(115200);
   Serial.println("Starting Télécommande BLE mach3");
 
-  pinMode(Pin_Ctrl, INPUT_PULLUP); // CTRL bouton pour la manivelle
+  pinMode(bouton.BT_SECU, INPUT_PULLUP); // CTRL bouton pour la manivelle
 
   pinMode(MAN.CodRotA, INPUT_PULLUP);
   pinMode(MAN.CodRotB, INPUT_PULLUP);
@@ -159,15 +159,12 @@ void loop()
   //unsigned int anti_rebond = 50;  //50 ms
   keypad.setDebounceTime(antiRebond);
 
-  //btMach3(); // Bouton mach3: STOP - PAUSE - START
-  btMach3WK(ARRET_BT);
-  // delay(1000);
-  btMach3WK(PAUSE_BT);
-  // delay(1000);
-  btMach3WK(START_BT);
-  // delay(2000);
+  // Bouton mach3: STOP - PAUSE - START
+  btMach3WK(ARRET_BT); btMach3WK(PAUSE_BT); btMach3WK(START_BT);
 
+  //if (digitalRead(bouton.BT_SECU) == LOW) { printf("Boutton BT_SECU - OK\n");
   manivelle(newkey);
+//}
 
   // if (Keyboard.isConnected() && newkey)
   // {
