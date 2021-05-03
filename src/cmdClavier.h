@@ -17,7 +17,7 @@ struct Bouton
      * Obligation d'appuyer sur le bouton (BT_SECU) pour pouvoir utiliser la manivelle  
      */
 
-    bool BT_SECU = 14;  // pin 26 - GPIO14
+    uint8_t BT_SECU = 14;  // pin 26 - GPIO14
 
     uint8_t Axe_X = 34; // pin 19 - GPIO34 - BT tester = OK
     uint8_t Axe_Y = 35; // pin 20 - GPIO35 - BT tester = OK

@@ -39,7 +39,7 @@ void manivelle(uint8_t newkey)
 
   if (MAN.codRotIncrement > 0) 
   {
-    //if (digitalRead(bouton.BT_SECU) == LOW)
+    if (digitalRead(bouton.BT_SECU) == LOW)
     //if (Keyboard.press(128) || Keyboard.press(132) && tmpBtState)
     //if (Keyboard.press(128) || Keyboard.press(132))
     { // Touche Ctrl à droite ou à gauche
@@ -57,29 +57,28 @@ void manivelle(uint8_t newkey)
 
   
 
-  if (digitalRead(bouton.Axe_X) == LOW ) {
-     printf("Axe_X\n");
+  if ((digitalRead(bouton.Axe_X) == LOW) && (digitalRead(bouton.BT_SECU) == LOW)) {
+     printf("Axe_X\n"); printf("Boutton BT_SECU = OK\n");
      MAN.changeAxe = KEY_LEFT_ARROW;
      MAN.changeAxe1 = KEY_RIGHT_ARROW;
      }
 
-  if (digitalRead(bouton.Axe_Y) == LOW) {
-     printf("Axe_Y\n");
+  if ((digitalRead(bouton.Axe_Y) == LOW) && (digitalRead(bouton.BT_SECU) == LOW)) {
+     printf("Axe_Y\n"); printf("Boutton BT_SECU = OK\n");
      MAN.changeAxe = KEY_UP_ARROW;
      MAN.changeAxe1 = KEY_DOWN_ARROW;
     }
 
-  if (digitalRead(bouton.Axe_Z) == LOW) {
-     printf("Axe_Z\n");
+  if ((digitalRead(bouton.Axe_Z) == LOW) && (digitalRead(bouton.BT_SECU) == LOW)) {
+     printf("Axe_Z\n"); printf("Boutton BT_SECU = OK\n");
      MAN.changeAxe = KEY_PAGE_UP;    //211
      MAN.changeAxe1 = KEY_PAGE_DOWN; //214
     }
 
-  if (digitalRead(bouton.Axe_A) == LOW) {
-     printf("Axe_A\n");
+  if ((digitalRead(bouton.Axe_A) == LOW) && (digitalRead(bouton.BT_SECU) == LOW)) {
+     printf("Axe_A\n"); printf("Boutton BT_SECU = OK\n");
      MAN.changeAxe = KEY_HOME;
      MAN.changeAxe1 = KEY_END;
-     //  Serial.println("Axe A ");
     }
   //}  
   printf("\n");

@@ -156,15 +156,12 @@ void loop()
     * 
     */
   //Anti rebond
-  //unsigned int anti_rebond = 50;  //50 ms
   keypad.setDebounceTime(antiRebond);
 
   // Bouton mach3: STOP - PAUSE - START
   btMach3WK(ARRET_BT); btMach3WK(PAUSE_BT); btMach3WK(START_BT);
 
-  //if (digitalRead(bouton.BT_SECU) == LOW) { printf("Boutton BT_SECU - OK\n");
   manivelle(newkey);
-//}
 
   // if (Keyboard.isConnected() && newkey)
   // {
