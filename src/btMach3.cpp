@@ -16,16 +16,11 @@ bool oldBtStatus[NB_BUTTON] = {1, 1, 1};
 bool btStatus[NB_BUTTON] = {HIGH, HIGH, HIGH};
 unsigned long lastAntiRebond[NB_BUTTON] = {0, 0, 0};
 
-int getIdxButton(uint8_t buttonPinNb)
-{
-  for (int i = 0; i < NB_BUTTON; ++i)
-  {
-    if (buttonPinNb == buttons[i])
-    {
-      return i;
-    }
-  }
-  return 0;
+int getIdxButton(uint8_t buttonPinNb) {
+  for (int i = 0; i < NB_BUTTON; ++i) { 
+      if (buttonPinNb == buttons[i]) { return i;}
+      }
+    return 0;
 }
 
 void btMach3WK(uint8_t pinNb)
@@ -58,20 +53,20 @@ void btMach3WK(uint8_t pinNb)
           printf("ARRET\n");
           Keyboard.press(KEY_LEFT_ALT);
           Keyboard.press(115); // touche LEFT_ALT + touche "s" en minuscule
-          delay(150);
+          delay(100);
           Keyboard.releaseAll();
           break;
         case PAUSE_BT:
           printf("PAUSE\n");
           Keyboard.press(32);
-          delay(150);
+          delay(100);
           Keyboard.releaseAll();
           break; // touche BACKSPACE
         case START_BT:
           printf("START\n");
           Keyboard.press(KEY_LEFT_ALT);
           Keyboard.press(114); // touche LEFT_ALT + touche "r" en minuscule
-          delay(150);
+          delay(100);
           Keyboard.releaseAll();
           break;
         } // fin du switch

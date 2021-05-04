@@ -122,6 +122,8 @@ void setup()
   pinMode(TMP_BT, INPUT_PULLUP);
 }
 
+//attachInterrupt (pinNb, btMach3WK, RISING);
+
 /*
  code VBScript à integrer dans mach3
   
@@ -160,6 +162,7 @@ void loop()
 
   // Bouton mach3: STOP - PAUSE - START
   btMach3WK(ARRET_BT); btMach3WK(PAUSE_BT); btMach3WK(START_BT);
+  //detachInterrupt(pinNb);
 
   manivelle(newkey);
 

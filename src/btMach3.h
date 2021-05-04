@@ -1,4 +1,4 @@
 #pragma once
 #include <Arduino.h>
 
-void btMach3WK(uint8_t pinNb);
+void IRAM_ATTR btMach3WK(uint8_t pinNb);

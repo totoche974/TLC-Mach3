@@ -43,7 +43,7 @@ struct Manivelle
 
     uint8_t inter = 5;
     uint8_t ledPin = 35; // TODO: to fix
-    uint8_t interState = 0;
+    uint8_t interState = 0; 
     uint8_t lastInterState = 0;
     uint8_t ledState = 0;
 };
