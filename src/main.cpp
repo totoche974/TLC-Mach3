@@ -106,8 +106,8 @@ void setup()
 
   pinMode(bouton.BT_SECU, INPUT_PULLUP); // CTRL bouton pour la manivelle
 
-  pinMode(MAN.CodRotA, INPUT_PULLUP);
-  pinMode(MAN.CodRotB, INPUT_PULLUP);
+  pinMode(MAN.CodRotA, INPUT); // _PULLUP
+  pinMode(MAN.CodRotB, INPUT); // _PULLUP
   pinMode(MAN.interState, INPUT_PULLUP);
   pinMode(MAN.ledState, OUTPUT);
   pinMode(bouton.Axe_X, INPUT_PULLUP);
@@ -119,7 +119,7 @@ void setup()
   pinMode(ARRET_BT, INPUT_PULLUP);
 
   // TMP
-  pinMode(TMP_BT, INPUT_PULLUP);
+  // pinMode(TMP_BT, INPUT_PULLUP);
 }
 
 //attachInterrupt (pinNb, btMach3WK, RISING);
@@ -132,10 +132,12 @@ void setup()
   Message "Arrrgggg....... télécommande non connectée “
  */
 
+extern Manivelle MAN;
+
 void loop()
 {
 
-  char newkey = keypad.getKey();
+  // char newkey = keypad.getKey();
   /*
   // mise en veille du clavier
    if (OnOff()) {
@@ -157,14 +159,35 @@ void loop()
     * @copyright Copyright (c) 2020
     * 
     */
-  //Anti rebond
-  keypad.setDebounceTime(antiRebond);
+  // //Anti rebond
+  // keypad.setDebounceTime(antiRebond);
 
-  // Bouton mach3: STOP - PAUSE - START
-  btMach3WK(ARRET_BT); btMach3WK(PAUSE_BT); btMach3WK(START_BT);
-  //detachInterrupt(pinNb);
+  // // Bouton mach3: STOP - PAUSE - START
+  // btMach3WK(ARRET_BT);
+  // btMach3WK(PAUSE_BT);
+  // btMach3WK(START_BT);
+  // //detachInterrupt(pinNb);
 
-  manivelle(newkey);
+  // manivelle(newkey);
+
+  if (digitalRead(MAN.CodRotA) == LOW)
+  {
+    printf("Manivelle CodRotA LOW\n");
+  }
+  if (digitalRead(MAN.CodRotB) == LOW)
+  {
+    printf("Manivelle CodRotB LOW\n");
+  }
+  if (digitalRead(MAN.CodRotA) == HIGH)
+  {
+    printf("Manivelle CodRotA HIGH\n");
+  }
+  if (digitalRead(MAN.CodRotB) == HIGH)
+  {
+    printf("Manivelle CodRotB HIGH\n");
+  }
+  printf("\n");
+  delay(500);
 
   // if (Keyboard.isConnected() && newkey)
   // {

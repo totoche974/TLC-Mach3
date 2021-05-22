@@ -9,20 +9,17 @@ extern Bouton bouton;
 
 AiEsp32RotaryEncoder Encoder = AiEsp32RotaryEncoder(MAN.CodRotA, MAN.CodRotB, MAN.inter);
 
-
-
 void manivelle(uint8_t newkey)
 {
-//if (digitalRead(bouton.BT_SECU) == LOW) { printf("Boutton BT_SECU - OK\n");
-     
+  //if (digitalRead(bouton.BT_SECU) == LOW) { printf("Boutton BT_SECU - OK\n");
 
   //bool tmpBtState = digitalRead(TMP_BT);
 
   MAN.codRotIncrement = Encoder.readEncoder() / 4; // Génère 4 impulsions (https://www.logre.eu/wiki/Codeur_rotatif_incrémental)
 
   if (MAN.codRotIncrement != 0)
-     { // Changement de MS affiché
-     if (MAN.codRotIncrement < 0)
+  { // Changement de MS affiché
+    if (MAN.codRotIncrement < 0)
     {
       if (digitalRead(bouton.BT_SECU) == LOW)
       //if (Keyboard.press(128) || Keyboard.press(132) && tmpBtState)
@@ -37,7 +34,7 @@ void manivelle(uint8_t newkey)
     }
   }
 
-  if (MAN.codRotIncrement > 0) 
+  if (MAN.codRotIncrement > 0)
   {
     if (digitalRead(bouton.BT_SECU) == LOW)
     //if (Keyboard.press(128) || Keyboard.press(132) && tmpBtState)
@@ -55,37 +52,66 @@ void manivelle(uint8_t newkey)
     Encoder.reset(0);        // TODO
   }                          // end coderot
 
-  
+  // if  (digitalRead(bouton.BT_SECU) == LOW) {
+  //     printf("Boutton BT_SECU = LOW\n");
+  // }
 
-  if ((digitalRead(bouton.Axe_X) == LOW) && (digitalRead(bouton.BT_SECU) == LOW)) {
-     printf("Axe_X\n"); printf("Boutton BT_SECU = OK\n");
-     MAN.changeAxe = KEY_LEFT_ARROW;
-     MAN.changeAxe1 = KEY_RIGHT_ARROW;
-     }
-
-  if ((digitalRead(bouton.Axe_Y) == LOW) && (digitalRead(bouton.BT_SECU) == LOW)) {
-     printf("Axe_Y\n"); printf("Boutton BT_SECU = OK\n");
-     MAN.changeAxe = KEY_UP_ARROW;
-     MAN.changeAxe1 = KEY_DOWN_ARROW;
+  if ((digitalRead(bouton.Axe_X) == LOW) && (digitalRead(bouton.BT_SECU) == LOW))
+  {
+    printf("Axe_X\n");
+    printf("Boutton BT_SECU = OK\n");
+    MAN.changeAxe = KEY_LEFT_ARROW;
+    MAN.changeAxe1 = KEY_RIGHT_ARROW;
+    // Avoir les sens de rotation de CodRotA et CodRotB
+    if (digitalRead(MAN.CodRotA) == LOW)
+    {
+      printf("Manivelle CodRotA LOW\n");
     }
-
-  if ((digitalRead(bouton.Axe_Z) == LOW) && (digitalRead(bouton.BT_SECU) == LOW)) {
-     printf("Axe_Z\n"); printf("Boutton BT_SECU = OK\n");
-     MAN.changeAxe = KEY_PAGE_UP;    //211
-     MAN.changeAxe1 = KEY_PAGE_DOWN; //214
+    if (digitalRead(MAN.CodRotB) == LOW)
+    {
+      printf("Manivelle CodRotB LOW\n");
     }
-
-  if ((digitalRead(bouton.Axe_A) == LOW) && (digitalRead(bouton.BT_SECU) == LOW)) {
-     printf("Axe_A\n"); printf("Boutton BT_SECU = OK\n");
-     MAN.changeAxe = KEY_HOME;
-     MAN.changeAxe1 = KEY_END;
+    if (digitalRead(MAN.CodRotA) == HIGH)
+    {
+      printf("Manivelle CodRotA HIGH\n");
     }
-  //}  
-  printf("\n");
-  delay(1000);
-//} fin du if du  BT_SECU
+    if (digitalRead(MAN.CodRotB) == HIGH)
+    {
+      printf("Manivelle CodRotB HIGH\n");
+    }
+  }
+
+  if ((digitalRead(bouton.Axe_Y) == LOW) && (digitalRead(bouton.BT_SECU) == LOW))
+  {
+    printf("Axe_Y\n");
+    printf("Boutton BT_SECU = OK\n");
+    MAN.changeAxe = KEY_UP_ARROW;
+    MAN.changeAxe1 = KEY_DOWN_ARROW;
+  }
+
+  if ((digitalRead(bouton.Axe_Z) == LOW) && (digitalRead(bouton.BT_SECU) == LOW))
+  {
+    printf("Axe_Z\n");
+    printf("Boutton BT_SECU = OK\n");
+    MAN.changeAxe = KEY_PAGE_UP;    //211
+    MAN.changeAxe1 = KEY_PAGE_DOWN; //214
+  }
+
+  if ((digitalRead(bouton.Axe_A) == LOW) && (digitalRead(bouton.BT_SECU) == LOW))
+  {
+    printf("Axe_A\n");
+    printf("Boutton BT_SECU = OK\n");
+    MAN.changeAxe = KEY_HOME;
+    MAN.changeAxe1 = KEY_END;
+  }
+  //}
+  printf("défile\n");
+  // TODO: à retirer
+  delay(100);
+  //} fin du if du  BT_SECU
 }
 
+// TODO: voir si c'est toujours utile
 void OnOff()
 {
   MAN.interState = digitalRead(MAN.inter);

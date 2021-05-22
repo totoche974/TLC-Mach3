@@ -6,7 +6,7 @@
 
 //typedef struct Bouton Bouton;
 
-const uint8_t TMP_BT = 39; // GPIO39
+// const uint8_t TMP_BT = 39; // GPIO39
 
 struct Bouton
 {
@@ -17,7 +17,7 @@ struct Bouton
      * Obligation d'appuyer sur le bouton (BT_SECU) pour pouvoir utiliser la manivelle  
      */
 
-    uint8_t BT_SECU = 14;  // pin 26 - GPIO14
+    uint8_t BT_SECU = 14; // pin 26 - GPIO14
 
     uint8_t Axe_X = 34; // pin 19 - GPIO34 - BT tester = OK
     uint8_t Axe_Y = 35; // pin 20 - GPIO35 - BT tester = OK
@@ -32,10 +32,10 @@ const uint8_t START_BT = 27; //pin 25 - GPIO27 - BT tester = OK
 
 //typedef struct Manivelle Manivelle;
 struct Manivelle
-{   
-    
-    uint8_t CodRotA = 19; // S2 
-    uint8_t CodRotB = 18; // S1
+{
+
+    uint8_t CodRotA = 19; // S2 - D19 - GPIO19
+    uint8_t CodRotB = 18; // S1 - D18 - GPIO18
     uint8_t changeAxe;
     uint8_t changeAxe1;
     uint8_t codRotIncrement = 0; // Direction de l'encodeur +1 ou -1
@@ -43,14 +43,12 @@ struct Manivelle
 
     uint8_t inter = 5;
     uint8_t ledPin = 35; // TODO: to fix
-    uint8_t interState = 0; 
+    uint8_t interState = 0;
     uint8_t lastInterState = 0;
     uint8_t ledState = 0;
 };
 
 //typedef struct Clavier Clavier;
-
-
 
 struct Clavier
 {
