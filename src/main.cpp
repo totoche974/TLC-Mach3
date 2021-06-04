@@ -84,7 +84,7 @@ extern Keypad keypad;
 extern BleKeyboard Keyboard;
 extern AiEsp32RotaryEncoder Encoder;
 
-// definition des structure
+// definition des structures
 Bouton bouton;
 Manivelle MAN;
 Clavier C;
@@ -93,16 +93,47 @@ Clavier C;
 //#define Pin_Ctrl 28
 
 bool flag = true; // Flag de securité clavier
+RTC_DATA_ATTR int bootCount = 0; // stocke le nombre de rédemarrage de l’ESP32
 //const uint8_t led = 2;
+
+
+void print_wakeup_reason(){
+   esp_sleep_wakeup_cause_t source_reveil;
+   source_reveil = esp_sleep_get_wakeup_cause();
+   switch(source_reveil){
+      case ESP_SLEEP_WAKEUP_EXT0 : Serial.println("Réviel cause par un signal RTC_IO"); break;
+      case ESP_SLEEP_WAKEUP_TOUCHPAD : Serial.println("Réveil causé par un touchpad"); break;
+      default : Serial.printf("Réveil pas causé par le Deep Sleep: %d\n",source_reveil); break;
+   }
+}
+
+
 
 void setup()
 {
 
-  Keyboard.begin();
-  Encoder.begin();
-
-  Serial.begin(115200);
+  Keyboard.begin(); Encoder.begin(); Serial.begin(115200);
   Serial.println("Starting Télécommande BLE mach3");
+
+  ++bootCount;
+      Serial.println("----------------------");
+      Serial.println(String(bootCount)+ "eme Boot ");
+
+    //Affiche la source du reveil
+    print_wakeup_reason();
+
+   //Configure le GPIO15 comme source de réveil quand la tension vaut 3.3V
+   //Uniquement RTC IO utilisé pour le reveil externe
+  //pins: 0,2,4,12-15,25-27,32-39.
+   esp_sleep_enable_ext0_wakeup(GPIO_NUM_15,1);
+
+   //https://learn.upesy.com/fr/programmation/Arduino-ESP32/DeepSleep.html
+
+
+      //Rentre en mode Deep Sleep
+      Serial.println("Rentre en mode Deep Sleep");
+      Serial.println("----------------------");
+      esp_deep_sleep_start();      
 
   pinMode(bouton.BT_SECU, INPUT_PULLUP); // CTRL bouton pour la manivelle
 
@@ -127,9 +158,9 @@ void setup()
 /*
  code VBScript à integrer dans mach3
   
-  Message "Euréka.......Télécommande connectée “ 
+  Message "Euréka.......TLC connectée “ 
   ou
-  Message "Arrrgggg....... télécommande non connectée “
+  Message "Arrrgggg....... TLC non connectée “
  */
 
 extern Manivelle MAN;

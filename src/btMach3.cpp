@@ -16,6 +16,13 @@ bool oldBtStatus[NB_BUTTON] = {1, 1, 1};
 bool btStatus[NB_BUTTON] = {HIGH, HIGH, HIGH};
 unsigned long lastAntiRebond[NB_BUTTON] = {0, 0, 0};
 
+/**
+ * @brief Get the Idx Button object
+ * 
+ * @param buttonPinNb 
+ * @return int 
+ */
+
 int getIdxButton(uint8_t buttonPinNb) {
   for (int i = 0; i < NB_BUTTON; ++i) { 
       if (buttonPinNb == buttons[i]) { return i;}
