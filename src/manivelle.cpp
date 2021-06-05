@@ -10,46 +10,44 @@ extern AiEsp32RotaryEncoder rotaryEncoder;
 
 int previousEncoderPosition = 0;
 
-const int KEY_2 = 50;
-const int KEY_4 = KEY_LEFT_ARROW;  // 37; // KEY_LEFT_ARROW; //100; // 52; // X- : 100
-const int KEY_6 = KEY_RIGHT_ARROW; // 39; // KEY_RIGHT_ARROW; // 102; // 54; // X+ : 102
-const int KEY_8 = 56;
+//const int KEY_2 = KEY_DOWN_ARROW;   // 40;
+//const int KEY_4 = KEY_LEFT_ARROW;   // 37; // KEY_LEFT_ARROW; //100; // 52; // X- : 100
+//const int KEY_6 = KEY_RIGHT_ARROW;  // 39; // KEY_RIGHT_ARROW; // 102; // 54; // X+ : 102
+//const int KEY_8 = KEY_UP_ARROW;     // 38;
 
 void manivelleInit()
 {
   if (digitalRead(Axe_X) == LOW)
-  {
+    {
     printf("Axe X\n");
-    MAN.changeAxe = KEY_4;  // ACSII 4 : 52
-    MAN.changeAxe1 = KEY_6; // ACSII 6 : 54
-  }
+    MAN.changeAxe = KEY_LEFT_ARROW; //KEY_4;  // ACSII 4 : 52
+    MAN.changeAxe1 = KEY_RIGHT_ARROW; //KEY_6; // ACSII 6 : 54
+    }
   if (digitalRead(Axe_Y) == LOW)
-  {
+    {
     printf("Axe Y\n");
-    MAN.changeAxe = KEY_8;  // ACSII 8 : 56
-    MAN.changeAxe1 = KEY_2; // ACSII 2 : 50
-  }
+    MAN.changeAxe = KEY_UP_ARROW; //KEY_8;  // ACSII 8 : 56
+    MAN.changeAxe1 = KEY_DOWN_ARROW; //KEY_2; // ACSII 2 : 50
+    }
   if (digitalRead(Axe_Z) == LOW)
-  {
+   {
     printf("Axe Z\n");
     MAN.changeAxe = KEY_PAGE_UP;
     MAN.changeAxe1 = KEY_PAGE_DOWN;
-  }
+    }
   if (digitalRead(Axe_A) == LOW)
-  {
+    {
     printf("Axe A\n");
     MAN.changeAxe = KEY_HOME;
     MAN.changeAxe1 = KEY_END;
-  }
+    }
 }
 
 void manivelle()
 {
   //dont print anything unless value changed
-  if (!rotaryEncoder.encoderChanged())
-  {
-    return;
-  }
+  if (!rotaryEncoder.encoderChanged()) { return; }
+
   manivelleInit();
 
   if (digitalRead(BT_SECU) == LOW)
