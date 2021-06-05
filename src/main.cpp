@@ -72,6 +72,7 @@ KEY_F12         0xCD  205
  * @copyright Copyright (c) 2020
  * 
  */
+
 #include <Arduino.h>
 #include "cmdClavier.h"
 #include "btMach3.h"
@@ -79,92 +80,124 @@ KEY_F12         0xCD  205
 #include <Keypad.h>
 #include <BleKeyboard.h>
 #include <AiEsp32RotaryEncoder.h>
+#include "bouton.h"
+
+#define ROTARY_ENCODER_A_PIN 19      // 32
+#define ROTARY_ENCODER_B_PIN 18      // 21
+#define ROTARY_ENCODER_BUTTON_PIN -1 // 25
+#define ROTARY_ENCODER_VCC_PIN -1    /* 27 put -1 of Rotary encoder Vcc is connected directly to 3,3V; else you can use declared output pin for powering rotary encoder */
+
+//depending on your encoder - try 1,2 or 4 to get expected behaviour
+//#define ROTARY_ENCODER_STEPS 1
+//#define ROTARY_ENCODER_STEPS 2
+#define ROTARY_ENCODER_STEPS 4
 
 extern Keypad keypad;
 extern BleKeyboard Keyboard;
-extern AiEsp32RotaryEncoder Encoder;
 
 // definition des structures
-Bouton bouton;
 Manivelle MAN;
 Clavier C;
 // Mach3 M3;
 
 //#define Pin_Ctrl 28
 
-bool flag = true; // Flag de securité clavier
+bool flag = true;                // Flag de securité clavier
 RTC_DATA_ATTR int bootCount = 0; // stocke le nombre de rédemarrage de l’ESP32
 //const uint8_t led = 2;
 
+//instead of changing here, rather change numbers above
+AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN, ROTARY_ENCODER_BUTTON_PIN, ROTARY_ENCODER_VCC_PIN, ROTARY_ENCODER_STEPS);
 
-void print_wakeup_reason(){
-   esp_sleep_wakeup_cause_t source_reveil;
-   source_reveil = esp_sleep_get_wakeup_cause();
-   switch(source_reveil){
-      case ESP_SLEEP_WAKEUP_EXT0 : Serial.println("Réviel cause par un signal RTC_IO"); break;
-      case ESP_SLEEP_WAKEUP_TOUCHPAD : Serial.println("Réveil causé par un touchpad"); break;
-      default : Serial.printf("Réveil pas causé par le Deep Sleep: %d\n",source_reveil); break;
-   }
+void print_wakeup_reason()
+{
+  esp_sleep_wakeup_cause_t source_reveil;
+  source_reveil = esp_sleep_get_wakeup_cause();
+  switch (source_reveil)
+  {
+  case ESP_SLEEP_WAKEUP_EXT0:
+    Serial.println("Réviel cause par un signal RTC_IO");
+    break;
+  case ESP_SLEEP_WAKEUP_TOUCHPAD:
+    Serial.println("Réveil causé par un touchpad");
+    break;
+  default:
+    Serial.printf("Réveil pas causé par le Deep Sleep: %d\n", source_reveil);
+    break;
+  }
 }
-
-
 
 void setup()
 {
-
-  Keyboard.begin(); Encoder.begin(); Serial.begin(115200);
+  Serial.begin(115200);
   Serial.println("Starting Télécommande BLE mach3");
 
+  Keyboard.begin();
+
+  rotaryEncoder.setup(
+      []
+      {
+        rotaryEncoder.readEncoder_ISR();
+      },
+      [] {});
+
+  /*Rotary acceleration introduced 25.2.2021.
+   * in case range to select is huge, for example - select a value between 0 and 1000 and we want 785
+   * without accelerateion you need long time to get to that number
+   * Using acceleration, faster you turn, faster will the value raise.
+   * For fine tuning slow down.
+   */
+  //rotaryEncoder.disableAcceleration(); //acceleration is now enabled by default - disable if you dont need it
+  rotaryEncoder.setAcceleration(250); //or set the value - larger number = more accelearation; 0 or 1 means disabled acceleration
+
   ++bootCount;
-      Serial.println("----------------------");
-      Serial.println(String(bootCount)+ "eme Boot ");
+  Serial.println("----------------------");
+  Serial.println(String(bootCount) + "eme Boot ");
 
-    //Affiche la source du reveil
-    print_wakeup_reason();
+  //Affiche la source du reveil
+  print_wakeup_reason();
 
-   //Configure le GPIO15 comme source de réveil quand la tension vaut 3.3V
-   //Uniquement RTC IO utilisé pour le reveil externe
+  //Configure le GPIO15 comme source de réveil quand la tension vaut 3.3V
+  //Uniquement RTC IO utilisé pour le reveil externe
   //pins: 0,2,4,12-15,25-27,32-39.
-   esp_sleep_enable_ext0_wakeup(GPIO_NUM_15,1);
+  esp_sleep_enable_ext0_wakeup(GPIO_NUM_15, 1);
 
-   //https://learn.upesy.com/fr/programmation/Arduino-ESP32/DeepSleep.html
+  //https://learn.upesy.com/fr/programmation/Arduino-ESP32/DeepSleep.html
 
+  // //Rentre en mode Deep Sleep
+  // Serial.println("Rentre en mode Deep Sleep");
+  // Serial.println("----------------------");
+  // esp_deep_sleep_start();
 
-      //Rentre en mode Deep Sleep
-      Serial.println("Rentre en mode Deep Sleep");
-      Serial.println("----------------------");
-      esp_deep_sleep_start();      
+  pinMode(BT_SECU, INPUT_PULLUP); // CTRL bouton pour la manivelle
 
-  pinMode(bouton.BT_SECU, INPUT_PULLUP); // CTRL bouton pour la manivelle
-
-  pinMode(MAN.CodRotA, INPUT); // _PULLUP
-  pinMode(MAN.CodRotB, INPUT); // _PULLUP
-  pinMode(MAN.interState, INPUT_PULLUP);
-  pinMode(MAN.ledState, OUTPUT);
-  pinMode(bouton.Axe_X, INPUT_PULLUP);
-  pinMode(bouton.Axe_Y, INPUT_PULLUP);
-  pinMode(bouton.Axe_Z, INPUT_PULLUP);
-  pinMode(bouton.Axe_A, INPUT_PULLUP);
+  pinMode(Axe_X, INPUT_PULLUP);
+  pinMode(Axe_Y, INPUT_PULLUP);
+  pinMode(Axe_Z, INPUT_PULLUP);
+  pinMode(Axe_A, INPUT_PULLUP);
   pinMode(START_BT, INPUT_PULLUP);
   pinMode(PAUSE_BT, INPUT_PULLUP);
   pinMode(ARRET_BT, INPUT_PULLUP);
-
-  // TMP
-  // pinMode(TMP_BT, INPUT_PULLUP);
 }
-
-//attachInterrupt (pinNb, btMach3WK, RISING);
 
 /*
  code VBScript à integrer dans mach3
-  
-  Message "Euréka.......TLC connectée “ 
+
+  Message "Euréka.......TLC connectée “
   ou
   Message "Arrrgggg....... TLC non connectée “
  */
 
 extern Manivelle MAN;
 
+/**
+    * @file fonction correspondantes au fichier :btMach3.cpp - cmdClavier.cpp - manivelle.cpp
+    * @author
+    * @brief Boutton de commande : STOP - PAUSE - ARRET
+    *
+    * @copyright Copyright (c) 2020
+    *
+    */
 void loop()
 {
 
@@ -175,50 +208,21 @@ void loop()
     if(flag)
     {
       if (Keyboard.isConnected()){
-        digitalWrite(led, HIGH); //Keyboard.begin(); 
+        digitalWrite(led, HIGH); //Keyboard.begin();
         }
         else Serial.println("Arrrgggg....... Keyboard non connecte");
-      
+
       flag = false;
     }
 */
-  /**
-    * @file fonction correspondantes au fichier :btMach3.cpp - cmdClavier.cpp - manivelle.cpp
-    * @author 
-    * @brief Boutton de commande : STOP - PAUSE - ARRET
-    * 
-    * @copyright Copyright (c) 2020
-    * 
-    */
-  // //Anti rebond
   // keypad.setDebounceTime(antiRebond);
 
-  // // Bouton mach3: STOP - PAUSE - START
-  // btMach3WK(ARRET_BT);
-  // btMach3WK(PAUSE_BT);
-  // btMach3WK(START_BT);
-  // //detachInterrupt(pinNb);
+  // Bouton mach3: STOP - PAUSE - START
+  btMach3WK(ARRET_BT);
+  btMach3WK(PAUSE_BT);
+  btMach3WK(START_BT);
 
-  // manivelle(newkey);
-
-  if (digitalRead(MAN.CodRotA) == LOW)
-  {
-    printf("Manivelle CodRotA LOW\n");
-  }
-  if (digitalRead(MAN.CodRotB) == LOW)
-  {
-    printf("Manivelle CodRotB LOW\n");
-  }
-  if (digitalRead(MAN.CodRotA) == HIGH)
-  {
-    printf("Manivelle CodRotA HIGH\n");
-  }
-  if (digitalRead(MAN.CodRotB) == HIGH)
-  {
-    printf("Manivelle CodRotB HIGH\n");
-  }
-  printf("\n");
-  delay(500);
+  manivelle();
 
   // if (Keyboard.isConnected() && newkey)
   // {
@@ -285,7 +289,7 @@ void loop()
 
 /*
     switch (key) {
-      
+
       case'E':                                          // Entrée
         //if (digitalRead(Pin_Ctrl) == LOW)
         if ( Keyboard.press (130) || Keyboard.press (132) == true )  {      //newkey Ctrl à droite ou à gauche
@@ -308,7 +312,7 @@ void loop()
         }
 
         Keyboard.write(219);
-        Keyboard.write (225);                            
+        Keyboard.write (225);
         Keyboard.releaseAll ();
         Keyboard.write(219);
         Keyboard.press (225);
@@ -326,7 +330,7 @@ void loop()
         }
         else
             {
-          Keyboard.write(226);                           
+          Keyboard.write(226);
           Keyboard.releaseAll ();
         }
         break;
@@ -385,7 +389,7 @@ void loop()
       case '6':
         if (digitalRead(Pin_Ctrl) == LOW)              // boucle pour garder le Ctrl appuyé
         {
-          Keyboard.write ('W');                       // en fait c'est le Z qui est écrit 
+          Keyboard.write ('W');                       // en fait c'est le Z qui est écrit
           Keyboard.release ('W');
           delay (400);
         }
@@ -428,7 +432,6 @@ void loop()
         }
         break;
 
-
       case '9':
         {
           while (digitalRead(Pin_Ctrl) == LOW)        // boucle pour garder le shift appuyé
@@ -459,7 +462,6 @@ void loop()
         Keyboard.release(179);
 
         break;
-
 
       case 'U':                                          // newkey F2 clavier déporté
 
@@ -516,7 +518,6 @@ void loop()
 
         Keyboard.releaseAll();
 
-
       case 'R':                                      // "Déplacement à Droite"
         {
           while (digitalRead(Pin_Ctrl) == LOW)       // boucle pour garder le shift appuyé
@@ -531,7 +532,6 @@ void loop()
         Keyboard.write(KEY_RIGHT_ARROW);
         break;
         Keyboard.releaseAll();
-
 
       case 'B':                                      // "Déplacement Bas"
         {
@@ -564,8 +564,6 @@ void loop()
         }
         Keyboard.write(KEY_UP_ARROW);
         break;
-        
-      
 
       case '#':                                     //  Manuel / Automatique ou début cycle
 
@@ -648,7 +646,7 @@ void loop()
       changeAxe1 = (KEY_PAGE_DOWN);           //214
       //  Serial.println("Axe Z ");
       }
-    
+
     if (digitalRead(BT.Axe_A) == LOW) {
       changeAxe = KEY_HOME;
       changeAxe1 = KEY_END;
@@ -662,7 +660,7 @@ void loop()
     codRotIncrement = Encoder.readEncoder() /4;
     // Génère 4 impulsions (https://www.logre.eu/wiki/Codeur_rotatif_incrémental)
 
-    if (codRotIncrement != 0) { // Changement de MS affiché 
+    if (codRotIncrement != 0) { // Changement de MS affiché
        if (codRotIncrement < 0)
       {
       //if (digitalRead(Pin_Ctrl) == LOW)
@@ -698,12 +696,13 @@ void loop()
       Keyboard.end();
       digitalWrite(led, LOW);
       flag = true;
-    
+
   } // fin du test btSecu
   }*/
 
 /*}*/
 
-//}   // end loop
+//}
+// end loop
 
 // fin du prog

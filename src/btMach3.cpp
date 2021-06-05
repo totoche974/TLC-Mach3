@@ -1,9 +1,11 @@
 #include <Arduino.h>
-#include "cmdClavier.h"
+#include "bouton.h"
 #include <BleKeyboard.h>
 #include "btMach3.h"
 
 BleKeyboard Keyboard("ESP32 Bluetooth clavier", "Espressif", 80);
+
+const unsigned antiRebond = 10;
 
 // LOW: 0
 // HIGH: 1
@@ -23,11 +25,16 @@ unsigned long lastAntiRebond[NB_BUTTON] = {0, 0, 0};
  * @return int 
  */
 
-int getIdxButton(uint8_t buttonPinNb) {
-  for (int i = 0; i < NB_BUTTON; ++i) { 
-      if (buttonPinNb == buttons[i]) { return i;}
-      }
-    return 0;
+int getIdxButton(uint8_t buttonPinNb)
+{
+  for (int i = 0; i < NB_BUTTON; ++i)
+  {
+    if (buttonPinNb == buttons[i])
+    {
+      return i;
+    }
+  }
+  return 0;
 }
 
 void btMach3WK(uint8_t pinNb)
