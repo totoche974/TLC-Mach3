@@ -12,7 +12,7 @@ const unsigned antiRebond = 10;
 
 const uint8_t NB_BUTTON = 3;
 
-const uint8_t buttons[NB_BUTTON] = {ARRET_BT, PAUSE_BT, START_BT};
+const uint8_t buttons[NB_BUTTON] = {PIN_ARRET_BT, PIN_PAUSE_BT, PIN_START_BT};
 
 bool oldBtStatus[NB_BUTTON] = {1, 1, 1};
 bool btStatus[NB_BUTTON] = {HIGH, HIGH, HIGH};
@@ -63,20 +63,20 @@ void btMach3WK(uint8_t pinNb)
         // printf("PASS 4\n");
         switch (pinNb)
         {
-        case ARRET_BT:
+        case PIN_ARRET_BT:
           printf("ARRET\n");
           Keyboard.press(KEY_LEFT_ALT);
           Keyboard.press(115); // touche LEFT_ALT + touche "s" en minuscule
           delay(100);
           Keyboard.releaseAll();
           break;
-        case PAUSE_BT:
+        case PIN_PAUSE_BT:
           printf("PAUSE\n");
           Keyboard.press(32);
           delay(100);
           Keyboard.releaseAll();
           break; // touche BACKSPACE
-        case START_BT:
+        case PIN_START_BT:
           printf("START\n");
           Keyboard.press(KEY_LEFT_ALT);
           Keyboard.press(114); // touche LEFT_ALT + touche "r" en minuscule

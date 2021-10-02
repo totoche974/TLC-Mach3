@@ -3,24 +3,34 @@
 #include <Keypad.h>
 #include <BleKeyboard.h>
 
+#include "I2CKeyPad.h"
+
 extern Clavier C;
 
-//-------------------------- Clavier Multiplexé ROWS 5 , COLS 4
+//-------------------------- Clavier I2C Multiplexé ROWS 4 , COLS 3
+
+const uint8_t KEYPAD_ADDRESS = 0x20;
+I2CKeyPad keyPad(KEYPAD_ADDRESS);
 
 char keys[ROWS][COLS] = {
-  {'1', '2', '3', 'A'},   //  I=F1, U=F2
-  {'4', '5', '6', 'B'},
-  {'7', '8', '9', 'C'},
-  {'F', '0', 'E', 'D'}
+  {'1', '2', '3',},   //  I=F1, U=F2
+  {'4', '5', '6',},
+  {'7', '8', '9',},
+  {'*', '0', '#',}
   /*,   //  C=Esc
   {'L', '0', 'R', 'E'}*/
 };
 
 byte rowPins[ROWS] = {C.lig_1, C.lig_2, C.lig_3, C.lig_4};
-byte colPins[COLS] = {C.col_1, C.col_2, C.col_3, C.col_4};
+byte colPins[COLS] = {C.col_1, C.col_2, C.col_3};
 
 Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
-
+/*
+ if(keyPad.begin() == false) { 
+  Serial.println("\nERREUR: Pas de communiquation avec le clavier.\nVeuillez rebooter le systeme.\n"); 
+  while(1); 
+  }
+*/
 extern BleKeyboard Keyboard;
 
 void Command_1(char newkey) { Serial.print("newkey = ");Serial.println(newkey); } // action à définir

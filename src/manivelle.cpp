@@ -5,7 +5,7 @@
 #include <AiEsp32RotaryEncoder.h>
 
 extern BleKeyboard Keyboard;
-extern Manivelle MAN;
+// extern Manivelle MAN;
 extern AiEsp32RotaryEncoder rotaryEncoder;
 
 int previousEncoderPosition = 0;
@@ -15,56 +15,90 @@ const int KEY_4 = KEY_LEFT_ARROW;  // 37; // KEY_LEFT_ARROW; //100; // 52; // X-
 const int KEY_6 = KEY_RIGHT_ARROW; // 39; // KEY_RIGHT_ARROW; // 102; // 54; // X+ : 102
 const int KEY_8 = 56;
 
-void manivelleInit()
+enum Axe
 {
-  if (digitalRead(Axe_X) == LOW)
+  Axe_x,
+  Axe_y,
+  Axe_z,
+  Axe_a
+};
+
+Axe selectedAxe = Axe_x;
+uint8_t selectedAxePositiveKey;
+uint8_t selectedAxeNegativeKey;
+
+void printAxe()
+{
+  switch (selectedAxe)
   {
+  case Axe_x:
     printf("Axe X\n");
-    MAN.changeAxe = KEY_4;  // ACSII 4 : 52
-    MAN.changeAxe1 = KEY_6; // ACSII 6 : 54
-  }
-  if (digitalRead(Axe_Y) == LOW)
-  {
+    break;
+  case Axe_y:
     printf("Axe Y\n");
-    MAN.changeAxe = KEY_8;  // ACSII 8 : 56
-    MAN.changeAxe1 = KEY_2; // ACSII 2 : 50
-  }
-  if (digitalRead(Axe_Z) == LOW)
-  {
+    break;
+  case Axe_z:
     printf("Axe Z\n");
-    MAN.changeAxe = KEY_PAGE_UP;
-    MAN.changeAxe1 = KEY_PAGE_DOWN;
-  }
-  if (digitalRead(Axe_A) == LOW)
-  {
+    break;
+  case Axe_a:
     printf("Axe A\n");
-    MAN.changeAxe = KEY_HOME;
-    MAN.changeAxe1 = KEY_END;
+    break;
+  }
+}
+
+void selectAxe()
+{
+  if ((digitalRead(PIN_AXE_X) == LOW) && selectedAxe != Axe_x)
+  {
+    selectedAxePositiveKey = KEY_4; // ACSII 4 : 52
+    selectedAxeNegativeKey = KEY_6; // ACSII 6 : 54
+    selectedAxe = Axe_x;
+    printAxe();
+  }
+  if ((digitalRead(PIN_AXE_Y) == LOW) && selectedAxe != Axe_y)
+  {
+    selectedAxePositiveKey = KEY_8; // ACSII 8 : 56
+    selectedAxeNegativeKey = KEY_2; // ACSII 2 : 50
+    selectedAxe = Axe_y;
+    printAxe();
+  }
+  if ((digitalRead(PIN_AXE_Z) == LOW) && selectedAxe != Axe_z)
+  {
+    selectedAxePositiveKey = KEY_PAGE_UP;
+    selectedAxeNegativeKey = KEY_PAGE_DOWN;
+    selectedAxe = Axe_z;
+    printAxe();
+  }
+  if ((digitalRead(PIN_AXE_A) == LOW) && selectedAxe != Axe_a)
+  {
+    selectedAxePositiveKey = KEY_HOME;
+    selectedAxeNegativeKey = KEY_END;
+    selectedAxe = Axe_a;
+    printAxe();
   }
 }
 
 void manivelle()
 {
-  //dont print anything unless value changed
-  if (!rotaryEncoder.encoderChanged())
-  {
-    return;
-  }
-  manivelleInit();
+  selectAxe();
 
-  if (digitalRead(BT_SECU) == LOW)
+  if (digitalRead(PIN_SECU_BT) == LOW)
   { // Touche Ctrl à droite ou à gauche
     int currentEncoderPosition = -rotaryEncoder.readEncoder();
     int deltaEncoder = currentEncoderPosition - previousEncoderPosition;
+    if (deltaEncoder != 0)
+    {
+      printAxe();
+      printf("deltaEncoder: %d\n", deltaEncoder);
+    }
     if (deltaEncoder > 0)
     {
 
       printf("CodRotIncrement > 0\n");
       // Keyboard.press(KEY_LEFT_CTRL);
-      printf("commande %d\n", MAN.changeAxe);
-      // Keyboard.press(MAN.changeAxe);
-      Keyboard.press(MAN.changeAxe);
-      //delay(50);
+      printf("commande %d\n\n", selectedAxePositiveKey);
+      Keyboard.press(selectedAxePositiveKey);
+      delay(50);
       Keyboard.releaseAll();
     }
     else if (deltaEncoder < 0)
@@ -72,15 +106,14 @@ void manivelle()
 
       printf("CodRotIncrement < 0\n");
       // Keyboard.press(KEY_LEFT_CTRL);
-      printf("commande %d\n", MAN.changeAxe1);
-      // Keyboard.press(MAN.changeAxe);
-      Keyboard.press(MAN.changeAxe1);
-      //delay(50);
+      printf("commande %d\n\n", selectedAxeNegativeKey);
+      Keyboard.press(selectedAxeNegativeKey);
+      delay(50);
       Keyboard.releaseAll();
     }
     previousEncoderPosition = currentEncoderPosition;
 
-    Serial.print("Value: ");
-    Serial.println(-rotaryEncoder.readEncoder());
+    // Serial.print("Value: ");
+    // Serial.println(-rotaryEncoder.readEncoder());
   }
 }

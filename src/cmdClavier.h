@@ -12,43 +12,45 @@
 
 // CodRotA : sens horaire
 // CodRotB : sens antihoraire
-const uint8_t CodRotA = 18; // S2 - D18 - GPIO18
-const uint8_t CodRotB = 19; // S1 - D19 - GPIO19
+// const uint8_t CodRotA = 18; // S2 - D18 - GPIO18
+// const uint8_t CodRotB = 19; // S1 - D19 - GPIO19
 
-//typedef struct Manivelle Manivelle;
-struct Manivelle
-{
-    uint8_t changeAxe;
-    uint8_t changeAxe1;
-    uint8_t codRotIncrement = 0; // Direction de l'encodeur +1 ou -1
-    uint8_t compteur = 0;
+// //typedef struct Manivelle Manivelle;
+// struct Manivelle
+// {
+//   uint8_t changeAxe;
+//   uint8_t changeAxe1;
+//   // uint8_t codRotIncrement = 0; // Direction de l'encodeur +1 ou -1
+//   // uint8_t compteur = 0;
 
-    // uint8_t inter = 5;
-    uint8_t ledPin = 35; // TODO: to fix
-    uint8_t interState = 0;
-    uint8_t lastInterState = 0;
-    uint8_t ledState = 0;
-};
+//   // uint8_t inter = 5;
+//   // uint8_t ledPin = 35; // TODO: to fix
+//   // uint8_t interState = 0;
+//   // uint8_t lastInterState = 0;
+//   // uint8_t ledState = 0;
+// };
 
 //typedef struct Clavier Clavier;
 
 struct Clavier
 {
-    byte lig_1 = 21;
-    byte lig_2 = 22;
-    byte lig_3 = 23;
-    byte lig_4 = 24;
-    //byte lig_5 = ;
-    byte col_1 = 13;
-    byte col_2 = 12;
-    byte col_3 = 14;
-    byte col_4 = 15;
+  byte lig_1 = 21; // SDA
+  byte lig_2 = 22; // SCL
+  byte lig_3 = 23;
+  byte lig_4 = 24;
+  //byte lig_5 = ;
+  byte col_1 = 13;
+  byte col_2 = 12;
+  byte col_3 = 14;
+  byte col_4 = 15;
 
-    // unsigned int anti_rebond = 50; //5 ms
+  // unsigned int anti_rebond = 50; //5 ms
 };
 
 const byte ROWS = 4; //4 lignes
-const byte COLS = 4; //4 colonnes
+const byte COLS = 3; //3 colonnes
+
+// const unsigned antiRebond = 10;
 
 // void btMach3(); // Bouton mach3: STOP - PAUSE - START
 
