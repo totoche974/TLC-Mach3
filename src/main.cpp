@@ -10,7 +10,7 @@
  */
 
 #include <Arduino.h>
-#include "cmdClavier.h"
+// #include "cmdClavier.h"
 #include "btMach3.h"
 #include "manivelle.h"
 #include <Keypad.h>
@@ -28,17 +28,26 @@
 
 #define ROTARY_ENCODER_STEPS 4
 
-extern Keypad keypad;
+// extern Keypad keypad;
 extern BleKeyboard Keyboard;
 
 // definition des structures
 // Manivelle MAN;
-Clavier C;
+// Clavier C;
 
 //instead of changing here, rather change numbers above
 AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN,
                                                           ROTARY_ENCODER_BUTTON_PIN, ROTARY_ENCODER_VCC_PIN,
                                                           ROTARY_ENCODER_STEPS);
+
+// const uint8_t KEYPAD_ADDRESS = 0x38;
+const uint8_t KEYPAD_ADDRESS = 0x20;
+// const uint8_t KEYPAD_ADDRESS = 0x27;
+
+I2CKeyPad keyPad(KEYPAD_ADDRESS);
+
+uint32_t start, stop;
+uint32_t lastKeyPressed = 0;
 
 void setup()
 {
@@ -46,8 +55,6 @@ void setup()
   Serial.println("Starting Télécommande BLE mach3");
 
   Keyboard.begin();
-  Wire.begin();
-  Wire.setClock(400000);
 
   //we must initialize rotary encoder
   rotaryEncoder.begin();
@@ -60,6 +67,15 @@ void setup()
       [] {});
 
   rotaryEncoder.setAcceleration(250);
+
+  Wire.begin();
+  Wire.setClock(400000);
+  if (keyPad.begin() == false)
+  {
+    Serial.println("\nERROR: cannot communicate to keypad.\nPlease reboot.\n");
+    while (1)
+      ;
+  }
 
   pinMode(PIN_SECU_BT, INPUT_PULLUP); // CTRL bouton pour la manivelle
 
@@ -82,12 +98,33 @@ void setup()
  */
 void loop()
 {
-  // Bouton mach3: STOP - PAUSE - START
-  btMach3WK(PIN_ARRET_BT);
-  btMach3WK(PIN_PAUSE_BT);
-  btMach3WK(PIN_START_BT);
+  // // Bouton mach3: STOP - PAUSE - START
+  // btMach3WK(PIN_ARRET_BT);
+  // btMach3WK(PIN_PAUSE_BT);
+  // btMach3WK(PIN_START_BT);
 
-  manivelle();
+  // manivelle();
+
+  uint32_t now = millis();
+  char keys[] = "123A456B789C*0#DNF"; // N = Nokey, F = Fail
+  // char keys[] = "123A456B789*0#"; // N = Nokey, F = Fail
+
+  if (now - lastKeyPressed >= 100)
+  {
+    lastKeyPressed = now;
+
+    start = micros();
+    uint8_t idx = keyPad.getKey();
+    stop = micros();
+
+    Serial.print(millis());
+    Serial.print("\t");
+    Serial.print(idx);
+    Serial.print("\t");
+    Serial.print(keys[idx]);
+    Serial.print("\t");
+    Serial.println(stop - start);
+  }
 
   // if (Keyboard.isConnected() && newkey)
   // {

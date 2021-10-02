@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "cmdClavier.h"
+// #include "cmdClavier.h"
 #include "bouton.h"
 #include <BleKeyboard.h>
 #include <AiEsp32RotaryEncoder.h>
