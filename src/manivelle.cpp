@@ -10,10 +10,15 @@ extern AiEsp32RotaryEncoder rotaryEncoder;
 
 int previousEncoderPosition = 0;
 
-const int KEY_2 = 50;
+// const int KEY_2 = 50;
+// const int KEY_4 = KEY_LEFT_ARROW;  // 37; // KEY_LEFT_ARROW; //100; // 52; // X- : 100
+// const int KEY_6 = KEY_RIGHT_ARROW; // 39; // KEY_RIGHT_ARROW; // 102; // 54; // X+ : 102
+// const int KEY_8 = 56;
+
+const int KEY_2 = KEY_DOWN_ARROW;  // 40;
 const int KEY_4 = KEY_LEFT_ARROW;  // 37; // KEY_LEFT_ARROW; //100; // 52; // X- : 100
 const int KEY_6 = KEY_RIGHT_ARROW; // 39; // KEY_RIGHT_ARROW; // 102; // 54; // X+ : 102
-const int KEY_8 = 56;
+const int KEY_8 = KEY_UP_ARROW;    // 38;
 
 enum Axe
 {
