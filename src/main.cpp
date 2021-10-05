@@ -58,8 +58,9 @@ void setup()
   Keyboard.begin();
   keypad.begin();
 
+
   //we must initialize rotary encoder
-  rotaryEncoder.begin();
+  //rotaryEncoder.begin();
 
   //we must initialize rotary encoder
   rotaryEncoder.begin();
@@ -75,12 +76,11 @@ void setup()
 
   Wire.begin();
   Wire.setClock(400000);
-  //if (keyPad.begin() == false)
+  //if (keypad.begin() == false)
   //   {
-    //Serial.println("\nERROR: cannot communicate to keypad.\nPlease reboot.\n");
-    //while (1)
-     // ;
-  //}
+  //  Serial.println("\nERREUR: Pas de communication avec le clavier.\nrebooter SVP.\n");
+  //  while (1);
+  //  }
 
   pinMode(PIN_SECU_BT, INPUT_PULLUP); // CTRL bouton pour la manivelle
 
@@ -102,17 +102,10 @@ void setup()
  *
  */
 void loop()
-{
-  // // Bouton mach3: STOP - PAUSE - START
-  // btMach3WK(PIN_ARRET_BT);
-  // btMach3WK(PIN_PAUSE_BT);
-  // btMach3WK(PIN_START_BT);
-
+  {
   char customKey = keypad.getKey();
 
-  if (customKey != NO_KEY){
-    Serial.println(customKey);
-  }
+  //if (customKey != NO_KEY){ Serial.println(customKey); }
 
   // // Bouton mach3: STOP - PAUSE - START
   // btMach3WK(PIN_ARRET_BT);
@@ -121,35 +114,12 @@ void loop()
 
   // manivelle();
 
-  //uint32_t now = millis();
-  //char keys[] = "123A456B789C*0#DNF"; // N = Nokey, F = Fail
-  //char keys[] = "123456789*0#NF"; // N = Nokey, F = Fail
-
-  //if (now - lastKeyPressed >= 100)
-  //{
-  //  lastKeyPressed = now;
-
-  //  start = micros();
-  //  uint8_t idx = KeyPad.getKey();
-  //  stop = micros();
-
-  //  Serial.print(millis());
-  //  Serial.print("\t");
-  //  Serial.print(idx);
-  //  Serial.print("\t");
-  //  Serial.print(keys[idx]);
-  //  Serial.print("\t");
-  //  Serial.println(stop - start);
-  //}
-
-  // if (Keyboard.isConnected() && newkey)
-  // {
-  //   switch (newkey)
-  //   {
-  //   case '1':
-  //     Command_1(newkey);
-  //     break;
-  //   case '2':
+   if (Keyboard.isConnected() && customKey != NO_KEY)
+   {
+     switch (customKey)
+     {
+     case '1': Command_1(customKey); break;
+  // case '2':
   //     Command_2(newkey);
   //     break;
   //   case '3':
@@ -195,9 +165,9 @@ void loop()
   //     Command_0(newkey);
   //     break;
 
-  //   } // fin du switch
+     } // fin du switch
 
-  // } // fin du if Keyboard.isConnected
+   } // fin du if Keyboard.isConnected
 
   //}// fin du test btSecu
 

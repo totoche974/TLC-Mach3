@@ -32,12 +32,13 @@ struct Manivelle
 
 //typedef struct Clavier Clavier;
 
+// entrées/sortie du PCF8574
 struct Clavier
 {
-    byte lig_1 = 0;
-    byte lig_2 = 1;
-    byte lig_3 = 2;
-    byte lig_4 = 3;
+    byte lig_1 = 3;
+    byte lig_2 = 2;
+    byte lig_3 = 1;
+    byte lig_4 = 0;
 
     byte col_1 = 4;
     byte col_2 = 5;
@@ -55,7 +56,7 @@ const byte COLS = 3; //3 colonnes
 //void manivelle(uint8_t newkey);
 void OnOff(); // mise en sécurité de la télécommande
 
-void Command_1(char newkey); // action :
+void Command_1(char customKey); // action :
 void Command_2(char newkey); //
 void Command_3(char newkey); //
 void Command_4(char newkey); //

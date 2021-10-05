@@ -27,7 +27,7 @@ Keypad_I2C keypad = Keypad_I2C ( makeKeymap(keys), rowPins, colPins, ROWS, COLS,
 
 extern BleKeyboard Keyboard;
 
-void Command_1(char newkey) { Serial.print("newkey = ");Serial.println(newkey); } // action à définir
+void Command_1(char customKey) { Serial.print("customKey = ");Serial.println(customKey); } // action à définir
 
 void Command_2(char newkey) { Serial.print("newkey = ");Serial.println(newkey); }
 
