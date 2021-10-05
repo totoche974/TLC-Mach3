@@ -1,16 +1,16 @@
 /**
  * @file main.cpp
- * @author 
- * @brief Télécommande bluetooth pour mach3 
+ * @author
+ * @brief Télécommande bluetooth pour mach3
  * @version 0.1
  * @date 2020-12-10
- * 
+ *
  * @copyright Copyright (c) 2020
- * 
+ *
  */
 
 #include <Arduino.h>
-// #include "cmdClavier.h"
+#include "cmdClavier.h"
 #include "btMach3.h"
 #include "manivelle.h"
 #include <Keypad.h>
@@ -19,7 +19,8 @@
 #include "bouton.h"
 
 #include "Wire.h"
-#include "I2CKeyPad.h"
+//#include "I2CKeyPad.h"
+#include <Keypad_I2C.h>
 
 #define ROTARY_ENCODER_A_PIN 19      // 32
 #define ROTARY_ENCODER_B_PIN 18      // 21
@@ -28,12 +29,12 @@
 
 #define ROTARY_ENCODER_STEPS 4
 
-// extern Keypad keypad;
+extern Keypad_I2C keypad;
 extern BleKeyboard Keyboard;
 
 // definition des structures
 // Manivelle MAN;
-// Clavier C;
+Clavier C;
 
 //instead of changing here, rather change numbers above
 AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN,
@@ -44,7 +45,7 @@ AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, 
 const uint8_t KEYPAD_ADDRESS = 0x20;
 // const uint8_t KEYPAD_ADDRESS = 0x27;
 
-I2CKeyPad keyPad(KEYPAD_ADDRESS);
+//I2CKeyPad keyPad(KEYPAD_ADDRESS);
 
 uint32_t start, stop;
 uint32_t lastKeyPressed = 0;
@@ -55,6 +56,10 @@ void setup()
   Serial.println("Starting Télécommande BLE mach3");
 
   Keyboard.begin();
+  keypad.begin();
+
+  //we must initialize rotary encoder
+  rotaryEncoder.begin();
 
   //we must initialize rotary encoder
   rotaryEncoder.begin();
@@ -70,12 +75,12 @@ void setup()
 
   Wire.begin();
   Wire.setClock(400000);
-  if (keyPad.begin() == false)
-  {
-    Serial.println("\nERROR: cannot communicate to keypad.\nPlease reboot.\n");
-    while (1)
-      ;
-  }
+  //if (keyPad.begin() == false)
+  //   {
+    //Serial.println("\nERROR: cannot communicate to keypad.\nPlease reboot.\n");
+    //while (1)
+     // ;
+  //}
 
   pinMode(PIN_SECU_BT, INPUT_PULLUP); // CTRL bouton pour la manivelle
 
@@ -103,28 +108,39 @@ void loop()
   // btMach3WK(PIN_PAUSE_BT);
   // btMach3WK(PIN_START_BT);
 
+  char customKey = keypad.getKey();
+
+  if (customKey != NO_KEY){
+    Serial.println(customKey);
+  }
+
+  // // Bouton mach3: STOP - PAUSE - START
+  // btMach3WK(PIN_ARRET_BT);
+  // btMach3WK(PIN_PAUSE_BT);
+  // btMach3WK(PIN_START_BT);
+
   // manivelle();
 
-  uint32_t now = millis();
-  char keys[] = "123A456B789C*0#DNF"; // N = Nokey, F = Fail
-  // char keys[] = "123A456B789*0#"; // N = Nokey, F = Fail
+  //uint32_t now = millis();
+  //char keys[] = "123A456B789C*0#DNF"; // N = Nokey, F = Fail
+  //char keys[] = "123456789*0#NF"; // N = Nokey, F = Fail
 
-  if (now - lastKeyPressed >= 100)
-  {
-    lastKeyPressed = now;
+  //if (now - lastKeyPressed >= 100)
+  //{
+  //  lastKeyPressed = now;
 
-    start = micros();
-    uint8_t idx = keyPad.getKey();
-    stop = micros();
+  //  start = micros();
+  //  uint8_t idx = KeyPad.getKey();
+  //  stop = micros();
 
-    Serial.print(millis());
-    Serial.print("\t");
-    Serial.print(idx);
-    Serial.print("\t");
-    Serial.print(keys[idx]);
-    Serial.print("\t");
-    Serial.println(stop - start);
-  }
+  //  Serial.print(millis());
+  //  Serial.print("\t");
+  //  Serial.print(idx);
+  //  Serial.print("\t");
+  //  Serial.print(keys[idx]);
+  //  Serial.print("\t");
+  //  Serial.println(stop - start);
+  //}
 
   // if (Keyboard.isConnected() && newkey)
   // {

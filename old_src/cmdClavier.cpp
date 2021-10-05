@@ -52,9 +52,9 @@ Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 // Keypad_I2C keypad = I2C_Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS, keypad_addr, PCF8574);
 
 /*
- if(keyPad.begin() == false) { 
-  Serial.println("\nERREUR: Pas de communiquation avec le clavier.\nVeuillez rebooter le systeme.\n"); 
-  while(1); 
+ if(keyPad.begin() == false) {
+  Serial.println("\nERREUR: Pas de communiquation avec le clavier.\nVeuillez rebooter le systeme.\n");
+  while(1);
   }
 */
 extern BleKeyboard Keyboard;

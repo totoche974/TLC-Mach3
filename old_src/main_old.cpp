@@ -6,7 +6,7 @@
 
   modification du 06/12
   changement de la lib du bouton rotatif
-  suppression de la lib #include <Encoder.h> remplacer par #include "AiEsp32RotaryEncoder.h" 
+  suppression de la lib #include <Encoder.h> remplacer par #include "AiEsp32RotaryEncoder.h"
   https://github.com/igorantolic/ai-esp32-rotary-encoder
 
   modification du 09/12
@@ -16,7 +16,7 @@
   ajout d'un interrupteur de sécurite, empechant le démarage du bluetooth de la télécommande
   restructuration du programme : decoupag en plusieurs pages ; mise en place de structure
 
-  modification du 30/12 
+  modification du 30/12
   avec l'aide de speedf37
   Implementation de l'anti-rebond sur les boutons STOP - PAUSE - START
   mise en place de la structure Mach3
@@ -64,13 +64,13 @@ KEY_F12         0xCD  205
 //https://github.com/T-vK/ESP32-BLE-Keyboard
 /**
  * @file main.cpp
- * @author 
- * @brief Télécommande bluetooth pour mach3 
+ * @author
+ * @brief Télécommande bluetooth pour mach3
  * @version 0.1
  * @date 2020-12-10
- * 
+ *
  * @copyright Copyright (c) 2020
- * 
+ *
  */
 
 #include <Arduino.h>
@@ -206,8 +206,8 @@ void setup()
 
 /*
  code VBScript à integrer dans mach3
-  
-  Message "Euréka.......Télécommande connectée “ 
+
+  Message "Euréka.......Télécommande connectée “
   ou
   Message "Arrrgggg....... télécommande non connectée “
  */

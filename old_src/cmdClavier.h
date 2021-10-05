@@ -34,23 +34,21 @@
 
 struct Clavier
 {
-  byte lig_1 = 21; // SDA
-  byte lig_2 = 22; // SCL
-  byte lig_3 = 23;
-  byte lig_4 = 24;
-  //byte lig_5 = ;
-  byte col_1 = 13;
-  byte col_2 = 12;
-  byte col_3 = 14;
-  byte col_4 = 15;
+    byte lig_1 = 0;
+    byte lig_2 = 1;
+    byte lig_3 = 2;
+    byte lig_4 = 3;
+
+    byte col_1 = 4;
+    byte col_2 = 5;
+    byte col_3 = 6;
+
 
   // unsigned int anti_rebond = 50; //5 ms
 };
 
 const byte ROWS = 4; //4 lignes
 const byte COLS = 3; //3 colonnes
-
-// const unsigned antiRebond = 10;
 
 // void btMach3(); // Bouton mach3: STOP - PAUSE - START
 
