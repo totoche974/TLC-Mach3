@@ -57,7 +57,7 @@ const byte COLS = 3; //3 colonnes
 void OnOff(); // mise en sécurité de la télécommande
 
 void Command_1(char customKey); // action :
-void Command_2(char newkey); //
+void Command_2(char customKey); //
 void Command_3(char newkey); //
 void Command_4(char newkey); //
 void Command_5(char newkey); //

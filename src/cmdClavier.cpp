@@ -29,7 +29,7 @@ extern BleKeyboard Keyboard;
 
 void Command_1(char customKey) { Serial.print("customKey = ");Serial.println(customKey); } // action à définir
 
-void Command_2(char newkey) { Serial.print("newkey = ");Serial.println(newkey); }
+void Command_2(char customKey) { Serial.print("customKey = ");Serial.println(customKey); }
 
 void Command_3(char newkey) { Serial.print("newkey = ");Serial.println(newkey); }
 

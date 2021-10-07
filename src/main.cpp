@@ -19,7 +19,6 @@
 #include "bouton.h"
 
 #include "Wire.h"
-//#include "I2CKeyPad.h"
 #include <Keypad_I2C.h>
 
 #define ROTARY_ENCODER_A_PIN 19      // 32
@@ -33,7 +32,7 @@ extern Keypad_I2C keypad;
 extern BleKeyboard Keyboard;
 
 // definition des structures
-// Manivelle MAN;
+Manivelle MAN;
 Clavier C;
 
 //instead of changing here, rather change numbers above
@@ -108,20 +107,18 @@ void loop()
   //if (customKey != NO_KEY){ Serial.println(customKey); }
 
   // // Bouton mach3: STOP - PAUSE - START
-  // btMach3WK(PIN_ARRET_BT);
-  // btMach3WK(PIN_PAUSE_BT);
-  // btMach3WK(PIN_START_BT);
+  btMach3WK(PIN_ARRET_BT);
+  btMach3WK(PIN_PAUSE_BT);
+  btMach3WK(PIN_START_BT);
 
-  // manivelle();
+  manivelle();
 
    if (Keyboard.isConnected() && customKey != NO_KEY)
    {
      switch (customKey)
      {
      case '1': Command_1(customKey); break;
-  // case '2':
-  //     Command_2(newkey);
-  //     break;
+     case '2': Command_2(customKey); break;
   //   case '3':
   //     Command_3(newkey);
   //     break;

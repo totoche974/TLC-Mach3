@@ -36,18 +36,10 @@ void printAxe()
 {
   switch (selectedAxe)
   {
-  case Axe_x:
-    printf("Axe X\n");
-    break;
-  case Axe_y:
-    printf("Axe Y\n");
-    break;
-  case Axe_z:
-    printf("Axe Z\n");
-    break;
-  case Axe_a:
-    printf("Axe A\n");
-    break;
+  case Axe_x: printf("Axe X\n"); break;
+  case Axe_y: printf("Axe Y\n"); break;
+  case Axe_z: printf("Axe Z\n"); break;
+  case Axe_a: printf("Axe A\n"); break;
   }
 }
 
