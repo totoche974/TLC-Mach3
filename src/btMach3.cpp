@@ -3,7 +3,8 @@
 #include <BleKeyboard.h>
 #include "btMach3.h"
 
-BleKeyboard Keyboard("ESP32 Bluetooth clavier", "Espressif", 80);
+// BleKeyboard Keyboard("ESP32 Bluetooth clavier", "Espressif", 80);
+extern BleKeyboard Keyboard;
 
 const unsigned antiRebond = 10;
 

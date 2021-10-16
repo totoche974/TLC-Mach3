@@ -1,12 +1,40 @@
 #include <Arduino.h>
-// #include "cmdClavier.h"
-#include "bouton.h"
 #include <BleKeyboard.h>
 #include <AiEsp32RotaryEncoder.h>
 
+#include "bouton.h"
+#include "selector.h"
+
 extern BleKeyboard Keyboard;
-// extern Manivelle MAN;
-extern AiEsp32RotaryEncoder rotaryEncoder;
+
+#define ROTARY_ENCODER_A_PIN 19      // 32
+#define ROTARY_ENCODER_B_PIN 18      // 21
+#define ROTARY_ENCODER_BUTTON_PIN -1 // 25
+#define ROTARY_ENCODER_VCC_PIN -1    /* 27 put -1 of Rotary encoder Vcc is connected directly to 3,3V; else you can use declared output pin for powering rotary encoder */
+
+#define ROTARY_ENCODER_STEPS 4
+
+// extern BleKeyboard Keyboard;
+
+//instead of changing here, rather change numbers above
+AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN,
+                                                          ROTARY_ENCODER_BUTTON_PIN, ROTARY_ENCODER_VCC_PIN,
+                                                          ROTARY_ENCODER_STEPS);
+
+void initManivelle()
+{
+  //we must initialize rotary encoder
+  rotaryEncoder.begin();
+
+  rotaryEncoder.setup(
+      []
+      {
+        rotaryEncoder.readEncoder_ISR();
+      },
+      [] {});
+
+  rotaryEncoder.setAcceleration(250);
+}
 
 int previousEncoderPosition = 0;
 
@@ -36,10 +64,18 @@ void printAxe()
 {
   switch (selectedAxe)
   {
-  case Axe_x: printf("Axe X\n"); break;
-  case Axe_y: printf("Axe Y\n"); break;
-  case Axe_z: printf("Axe Z\n"); break;
-  case Axe_a: printf("Axe A\n"); break;
+  case Axe_x:
+    printf("Axe X\n");
+    break;
+  case Axe_y:
+    printf("Axe Y\n");
+    break;
+  case Axe_z:
+    printf("Axe Z\n");
+    break;
+  case Axe_a:
+    printf("Axe A\n");
+    break;
   }
 }
 
@@ -109,8 +145,5 @@ void manivelle()
       Keyboard.releaseAll();
     }
     previousEncoderPosition = currentEncoderPosition;
-
-    // Serial.print("Value: ");
-    // Serial.println(-rotaryEncoder.readEncoder());
   }
 }
