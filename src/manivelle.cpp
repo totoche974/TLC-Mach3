@@ -115,10 +115,10 @@ void manivelle()
 {
   selectAxe();
 
+  int currentEncoderPosition = -rotaryEncoder.readEncoder();
+  int deltaEncoder = currentEncoderPosition - previousEncoderPosition;
   if (digitalRead(PIN_SECU_BT) == LOW)
   { // Touche Ctrl à droite ou à gauche
-    int currentEncoderPosition = -rotaryEncoder.readEncoder();
-    int deltaEncoder = currentEncoderPosition - previousEncoderPosition;
     if (deltaEncoder != 0)
     {
       printAxe();
@@ -144,6 +144,6 @@ void manivelle()
       delay(50);
       Keyboard.releaseAll();
     }
-    previousEncoderPosition = currentEncoderPosition;
   }
+  previousEncoderPosition = currentEncoderPosition;
 }
