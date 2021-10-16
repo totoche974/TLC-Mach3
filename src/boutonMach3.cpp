@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include "bouton.h"
 #include <BleKeyboard.h>
-#include "btMach3.h"
+
+#include "boutonMach3.h"
 
 // BleKeyboard Keyboard("ESP32 Bluetooth clavier", "Espressif", 80);
 extern BleKeyboard Keyboard;
@@ -38,7 +38,7 @@ int getIdxButton(uint8_t buttonPinNb)
   return 0;
 }
 
-void btMach3WK(uint8_t pinNb)
+void btMach3(uint8_t pinNb)
 {
 
   int lireBt = digitalRead(pinNb);

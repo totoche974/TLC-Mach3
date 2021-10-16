@@ -3,7 +3,7 @@
 #include <BleKeyboard.h>
 #include <Keypad_I2C.h>
 
-#include "cmdClavier.h"
+#include "commandClavier.h"
 
 //-------------------------- Clavier Multiplexé ROWS 4 , COLS 3
 

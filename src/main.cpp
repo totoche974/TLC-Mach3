@@ -16,10 +16,9 @@
 #include <Wire.h>
 #include <Keypad_I2C.h>
 
-#include "cmdClavier.h"
-#include "btMach3.h"
+#include "commandClavier.h"
+#include "boutonMach3.h"
 #include "manivelle.h"
-#include "bouton.h"
 #include "selector.h"
 
 BleKeyboard Keyboard("ESP32 Bluetooth clavier", "Espressif", 80);
@@ -63,9 +62,9 @@ void setup()
 void loop()
 {
   // Bouton mach3: STOP - PAUSE - START
-  btMach3WK(PIN_ARRET_BT);
-  btMach3WK(PIN_PAUSE_BT);
-  btMach3WK(PIN_START_BT);
+  btMach3(PIN_ARRET_BT);
+  btMach3(PIN_PAUSE_BT);
+  btMach3(PIN_START_BT);
 
   manivelle();
 
