@@ -32,28 +32,49 @@
 #include <Keypad.h>
 #include <Wire.h>
 // #define I2CADDR 0x38
-#define I2CADDR 0x20
+// #define I2CADDR 0x20
+#define I2CADDR 0x27
+
+// const byte ROWS = 4; //four rows
+// const byte COLS = 3; //three columns
+// char keys[ROWS][COLS] = {
+//     {'1', '2', '3'},
+//     {'4', '5', '6'},
+//     {'7', '8', '9'},
+//     {'*', '0', '#'}};
 
 const byte ROWS = 4; //four rows
-const byte COLS = 3; //three columns
+const byte COLS = 4; //four columns
 char keys[ROWS][COLS] = {
-    {'1', '2', '3'},
-    {'4', '5', '6'},
-    {'7', '8', '9'},
-    {'*', '0', '#'}};
-
+    {'1', '2', '3', 'A'},
+    {'4', '5', '6', 'B'},
+    {'7', '8', '9', 'C'},
+    {'*', '0', '#', 'D'}};
 // Digitran keypad, bit numbers of PCF8574 i/o port
-const byte lig_1 = 3;
-const byte lig_2 = 2;
-const byte lig_3 = 1;
-const byte lig_4 = 0;
+// const byte lig_1 = 3;
+// const byte lig_2 = 2;
+// const byte lig_3 = 1;
+// const byte lig_4 = 0;
+
+// const byte col_1 = 4;
+// const byte col_2 = 5;
+// const byte col_3 = 6;
+
+const byte lig_1 = 0;
+const byte lig_2 = 1;
+const byte lig_3 = 2;
+const byte lig_4 = 3;
 
 const byte col_1 = 4;
 const byte col_2 = 5;
 const byte col_3 = 6;
+const byte col_4 = 7;
+
+// byte rowPins[ROWS] = {lig_1, lig_2, lig_3, lig_4};
+// byte colPins[COLS] = {col_1, col_2, col_3};
 
 byte rowPins[ROWS] = {lig_1, lig_2, lig_3, lig_4};
-byte colPins[COLS] = {col_1, col_2, col_3};
+byte colPins[COLS] = {col_1, col_2, col_3, col_4};
 
 TwoWire *jwire = &Wire; //test passing pointer to keypad lib
 Keypad_I2C kpd(makeKeymap(keys), rowPins, colPins, ROWS, COLS, I2CADDR, PCF8574, jwire);
@@ -61,9 +82,13 @@ Keypad_I2C kpd(makeKeymap(keys), rowPins, colPins, ROWS, COLS, I2CADDR, PCF8574,
 void setup()
 {
   Serial.begin(9600);
+  // Serial.begin(15200);
   while (!Serial)
   { /*wait*/
   }
+
+  // Keypad_I2C kpd2(makeKeymap(keys), rowPins, colPins, ROWS, COLS, I2CADDR, PCF8574, jwire);
+
   //  Wire.begin( );
   jwire->begin();
   //  kpd.begin( makeKeymap(keys) );
@@ -71,6 +96,7 @@ void setup()
   Serial.print("start with pinState = ");
   Serial.println(kpd.pinState_set(), HEX);
 }
+
 void loop()
 {
 
