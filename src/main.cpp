@@ -20,6 +20,7 @@
 #include "boutonMach3.h"
 #include "manivelle.h"
 #include "selector.h"
+#include "screen.h"
 
 BleKeyboard Keyboard("ESP32 Bluetooth clavier", "Espressif", 80);
 
@@ -38,6 +39,7 @@ void setup()
 
   initCommandClavier();
   initManivelle();
+  initScreen();
 
   // CTRL bouton pour la manivelle
   pinMode(PIN_SECU_BT, INPUT_PULLUP);
