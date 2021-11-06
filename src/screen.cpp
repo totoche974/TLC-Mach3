@@ -42,3 +42,38 @@ void initScreen()
 
   display->display();
 }
+
+// long chronos;
+long startMessage;
+String messageToPrint;
+
+void screenSendMessage(String message)
+{
+  startMessage = millis();
+  messageToPrint = message;
+}
+
+void loopScreen()
+{
+  if (!messageToPrint.isEmpty())
+  {
+    display->clearDisplay();
+
+    display->setTextSize(2); // Draw 2X-scale text
+    display->setTextColor(SSD1306_WHITE);
+    display->setCursor(0, 0);
+    display->println(F(messageToPrint.c_str()));
+    display->display(); // Show initial text
+  }
+  else
+  {
+    display->clearDisplay();
+    display->display();
+  }
+
+  long elapseTime = millis() - startMessage;
+  if (5000 < elapseTime)
+  {
+    messageToPrint = "";
+  }
+}

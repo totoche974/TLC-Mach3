@@ -4,6 +4,7 @@
 
 #include "boutonMach3.h"
 #include "selector.h"
+#include "screen.h"
 
 extern BleKeyboard Keyboard;
 
@@ -66,15 +67,19 @@ void printAxe()
   {
   case Axe_x:
     printf("Axe X\n");
+    screenSendMessage("Axe X");
     break;
   case Axe_y:
     printf("Axe Y\n");
+    screenSendMessage("Axe Y");
     break;
   case Axe_z:
     printf("Axe Z\n");
+    screenSendMessage("Axe Z");
     break;
   case Axe_a:
     printf("Axe A\n");
+    screenSendMessage("Axe A");
     break;
   }
 }

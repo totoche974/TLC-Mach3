@@ -72,4 +72,6 @@ void loop()
 
   runCommandClavier();
 
+  loopScreen();
+
 } // end loop
