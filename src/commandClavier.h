@@ -10,4 +10,6 @@
 void initCommandClavier();
 void runCommandClavier();
 
+void DisableWifi();
+
 #endif // _CMD_CLAVIER_H

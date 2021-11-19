@@ -1,0 +1,46 @@
+// Numéro de la pin du bouton
+const int pinBtn = ...;
+ 
+// État d'activation de la tempo
+int tempoActive = 0;
+ 
+// Temps à l'activation de la tempo
+unsigned long tempoDepart = 0;
+ 
+ 
+ 
+void setup() {
+    Serial.begin(9600);
+    pinMode(pinBtn, INPUT);    
+}
+ 
+ 
+ 
+void loop() {
+     
+    // Si le bouton est enfoncé,
+    if ( digitalRead(pinBtn) == LOW ) {
+         
+        // Alors on active la temporisation
+        tempoActive = 1;
+        tempoDepart = millis();
+         
+    }
+     
+    // Si la temporisation est active,
+    if ( tempoActive ) {
+         
+        // Et si il s'est écoulé 3 secondes,
+        if ( ( millis() - tempoDepart ) >= 3000 ) {
+             
+            // Alors on affiche un petit message
+            Serial.println("Hey, cela fait 3 secondes que tu as relaché le bouton!");
+             
+            // Et on désactive la temporisation pour ne pas afficher ce message une seconde fois
+            tempoActive = 0;
+             
+        }
+         
+    }
+     
+}

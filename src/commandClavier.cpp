@@ -2,18 +2,23 @@
 #include <Keypad.h>
 #include <BleKeyboard.h>
 #include <Keypad_I2C.h>
+#include "WiFi.h"
 
 #include "commandClavier.h"
 
+#include "screen.h"
+
+extern BleKeyboard Keyboard;
+
 const uint8_t KEYPAD_ADDRESS = 0x27;
 
-const byte ROWS = 4; //four rows
-const byte COLS = 4; //four columns
+const byte ROWS = 4; //4 lignes
+const byte COLS = 4; //4 colonnes
 char keys[ROWS][COLS] = {
     {'1', '2', '3', 'A'},
     {'4', '5', '6', 'B'},
     {'7', '8', '9', 'C'},
-    {'*', '0', '#', 'D'}};
+    {'E', '0', 'F', 'D'}};
 
 // Digitran keypad, bit numbers of PCF8574 i/o port
 const byte lig_1 = 0;
@@ -32,6 +37,14 @@ byte colPins[COLS] = {col_1, col_2, col_3, col_4};
 TwoWire *jwire = &Wire; //test passing pointer to keypad lib
 Keypad_I2C keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS, KEYPAD_ADDRESS, PCF8574, jwire);
 
+void DisableWifi()
+{
+ WiFi.disconnect();
+ WiFi.mode(WIFI_OFF);
+ delay(1);
+ //screenSendMessage("WIFI OFF");
+}
+
 void initCommandClavier()
 {
   jwire->begin();
@@ -46,66 +59,118 @@ void Command_1(char key)
 {
   Serial.print("key = ");
   Serial.println(key);
+  screenSendMessage(" Rewind");
 } // action à définir
 
 void Command_2(char key)
 {
   Serial.print("key = ");
   Serial.println(key);
+  screenSendMessage("Goto XYZ=0");
 }
 
 void Command_3(char key)
 {
   Serial.print("key = ");
   Serial.println(key);
+  screenSendMessage(" Parking");
 }
 
 void Command_4(char key)
 {
   Serial.print("key = ");
   Serial.println(key);
+  screenSendMessage("M/A Broche");
+  //Keyboard.press(KEY_F5);
+  
 }
 
 void Command_5(char key)
 {
   Serial.print("key = ");
   Serial.println(key);
+  screenSendMessage("Lubrifier");
 }
 
 void Command_6(char key)
 {
   Serial.print("key = ");
   Serial.println(key);
+  screenSendMessage("Soufflerie");
 }
-
+/*
+*/
 void Command_7(char key)
 {
-  Serial.print("key = ");
-  Serial.println(key);
+unsigned char compteur, mem_etat;
+unsigned short current_millis, elasped_millis, mem_first_millis, mem_next_millis;
+/*
+if ( key == 7 ) {
+     
+    current_millis = millis();
+     
+    if ( mem_etat == HIGH ) {
+        mem_first_millis = current_millis;
+        mem_next_millis  = current_millis;
+    }
+     
+    if ( current_millis >= mem_next_millis ) {
+         
+        elasped_millis = ( mem_first_millis - current_millis );
+         
+        if ( elasped_millis < 500 ) {
+            mem_next_millis = ( current_millis + 100 ); Serial.println("appuie long");
+        } else {
+            mem_next_millis = ( current_millis + 50 ); Serial.println("appuie court");
+        }
+         
+        compteur++;
+         
+    }
+ 
+}
+ 
+mem_etat = key;
+*/
+  screenSendMessage(" Ref All");
+  // action pour le référencement de tout les axes
+
+/**
+ * @brief Boutton de commande pour le référencement des axes
+ * Si BT pressé, éxécution du référencement de tous les axes 
+ * si BT préssé + de 1s , référencement de l'axe sélectionné
+ */
+  //Keyboard.press(KEY_LEFT_ALT);
+  
 }
 
 void Command_8(char key)
 {
   Serial.print("key = ");
   Serial.println(key);
+  screenSendMessage("   Home");
 }
 
 void Command_9(char key)
 {
   Serial.print("key = ");
   Serial.println(key);
+  screenSendMessage(" Goto XY=0");
 }
+
 
 void Command_0(char key)
 {
   Serial.print("key = ");
   Serial.println(key);
-}
+  screenSendMessage("  Z Haut");
+}  
 
 void Command_A(char key)
 {
   Serial.print("key = ");
   Serial.println(key);
+  screenSendMessage(" Probe Z");
 }
 
 void Command_B(char key)
@@ -180,22 +245,22 @@ void runCommandClavier()
     Command_0(key);
     break;
   case 'A':
-    Command_0(key);
+    Command_A(key);
     break;
   case 'B':
-    Command_0(key);
+    Command_B(key);
     break;
   case 'C':
-    Command_0(key);
+    Command_C(key);
     break;
   case 'D':
-    Command_0(key);
+    Command_D(key);
     break;
   case 'E':
-    Command_0(key);
+    Command_E(key);
     break;
   case 'F':
-    Command_0(key);
+    Command_F(key);
     break;
 
   } // fin du switch

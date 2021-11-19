@@ -67,19 +67,19 @@ void printAxe()
   {
   case Axe_x:
     printf("Axe X\n");
-    screenSendMessage("Axe X");
+    screenSendMessage("   Axe X ");
     break;
   case Axe_y:
     printf("Axe Y\n");
-    screenSendMessage("Axe Y");
+    screenSendMessage("   Axe Y ");
     break;
   case Axe_z:
     printf("Axe Z\n");
-    screenSendMessage("Axe Z");
+    screenSendMessage("   Axe Z ");
     break;
   case Axe_a:
     printf("Axe A\n");
-    screenSendMessage("Axe A");
+    screenSendMessage("   Axe A ");
     break;
   }
 }

@@ -33,25 +33,32 @@ void setup()
   while (!Serial)
   { /*wait*/
   }
-  Serial.println("Starting Télécommande BLE mach3");
-
+  //Serial.println("Starting Télécommande BLE mach3");
+  
   Keyboard.begin();
 
   initCommandClavier();
   initManivelle();
   initScreen();
-
-  // CTRL bouton pour la manivelle
+  
+  // Bouton de sécurité pour la manivelle et le clavier
   pinMode(PIN_SECU_BT, INPUT_PULLUP);
 
   pinMode(PIN_AXE_X, INPUT_PULLUP);
   pinMode(PIN_AXE_Y, INPUT_PULLUP);
   pinMode(PIN_AXE_Z, INPUT_PULLUP);
   pinMode(PIN_AXE_A, INPUT_PULLUP);
+
   pinMode(PIN_START_BT, INPUT_PULLUP);
   pinMode(PIN_PAUSE_BT, INPUT_PULLUP);
   pinMode(PIN_ARRET_BT, INPUT_PULLUP);
+
+  //DisableWifi();
+  
+  screenSendMessage("TLC-M3 ON");
 }
+
+
 
 /**
  * @file fonction correspondantes au fichier :btMach3.cpp - cmdClavier.cpp - manivelle.cpp
