@@ -22,6 +22,21 @@ bool btStatus[NB_BUTTON] = {HIGH, HIGH, HIGH};
 unsigned long lastAntiRebond[NB_BUTTON] = {0, 0, 0};
 
 /**
+ * @brief Mise en someil leger
+ * 
+ * @param GPIO 14 (bt secu) 
+ * @return  
+ */
+
+void dodo()
+  {
+    esp_sleep_enable_ext0_wakeup(GPIO_NUM_14,LOW);
+    int ret = esp_light_sleep_start();
+    screenSendMessage("Au Dodo...");
+    Serial.println(ret);
+  }
+
+/**
  * @brief Get the Idx Button object
  * 
  * @param buttonPinNb 

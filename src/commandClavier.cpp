@@ -59,7 +59,7 @@ void Command_1(char key)
 {
   Serial.print("key = ");
   Serial.println(key);
-  screenSendMessage(" Rewind");
+  screenSendMessage("  Rewind");
 } // action à définir
 
 void Command_2(char key)
@@ -82,7 +82,6 @@ void Command_4(char key)
   Serial.println(key);
   screenSendMessage("M/A Broche");
   //Keyboard.press(KEY_F5);
-  
 }
 
 void Command_5(char key)
@@ -98,57 +97,59 @@ void Command_6(char key)
   Serial.println(key);
   screenSendMessage("Soufflerie");
 }
-/*
-*/
-void Command_7(char key)
-{
-unsigned char compteur, mem_etat;
-unsigned short current_millis, elasped_millis, mem_first_millis, mem_next_millis;
-/*
-if ( key == 7 ) {
-     
-    current_millis = millis();
-     
-    if ( mem_etat == HIGH ) {
-        mem_first_millis = current_millis;
-        mem_next_millis  = current_millis;
-    }
-     
-    if ( current_millis >= mem_next_millis ) {
-         
-        elasped_millis = ( mem_first_millis - current_millis );
-         
-        if ( elasped_millis < 500 ) {
-            mem_next_millis = ( current_millis + 100 ); Serial.println("appuie long");
-        } else {
-            mem_next_millis = ( current_millis + 50 ); Serial.println("appuie court");
-        }
-         
-        compteur++;
-         
-    }
- 
-}
- 
-mem_etat = key;
-*/
-  screenSendMessage(" Ref All");
-  // action pour le référencement de tout les axes
 
 /**
  * @brief Boutton de commande pour le référencement des axes
  * Si BT pressé, éxécution du référencement de tous les axes 
- * si BT préssé + de 1s , référencement de l'axe sélectionné
+ * si BT préssé + de 500ms , référencement de l'axe sélectionné
+ * 
+ * https://forum.pjrc.com/threads/48615-keypad-library-how-to-differentiate-between-momentary-switch-and-toggle-switch
  */
-  //Keyboard.press(KEY_LEFT_ALT);
-  
+
+void Command_7(char key)
+{
+// État d'activation de la tempo
+int tempoActive = 0; int tempoStop = 0;
+// Temps à l'activation de la tempo
+unsigned long tempoDepart = 0;
+
+  // Si le bouton est enfoncé,
+  if (keypad.getState() == PRESSED ){
+    if (key == '7') {
+      Serial.println("on démare la temporisation"); 
+      tempoActive = 1;
+      tempoDepart = millis();
+    }
+    // Si le bouton est relache,
+    else if ( keypad.stateChanged == IDLE ) {
+        Serial.println("on arrete la temporisation"); 
+        tempoStop = millis() - tempoDepart ;
+        
+      }
+     
+  }
+  Serial.print("tempoStop = "); Serial.println(tempoStop); tempoActive = 0; tempoStop = 0; 
 }
+  /*
+  // Si la temporisation est active,
+    
+  if ( tempoActive ) {
+  // Et si il s'est écoulé + de 300 ms,
+  if ( ( millis() - tempoDepart ) >= 1000 ) {
+   // Alors on affiche
+    Serial.println("Référencement de tout les axes");
+    }
+    else { Serial.println("On référence l'axe sélectionné "); }
+    // on désactive la temporisation pour ne pas afficher ce message une seconde fois
+  tempoActive = 0;  
+  } 
+}
+*/
 
 void Command_8(char key)
 {
-  Serial.print("key = ");
-  Serial.println(key);
-  screenSendMessage("   Home");
+  Serial.print("key = "); Serial.println(key);
+  screenSendMessage("  Home");
 }
 
 void Command_9(char key)
@@ -157,7 +158,6 @@ void Command_9(char key)
   Serial.println(key);
   screenSendMessage(" Goto XY=0");
 }
-
 
 void Command_0(char key)
 {
@@ -203,15 +203,19 @@ void Command_F(char key)
   Serial.println(key);
 }
 
+void keypadEvent(KeypadEvent key){
+if (keypad.getState() == PRESSED ){
+   if (key == '7') {
+    Serial.println("On reference");
+    }
+
+  }
+} 
+
 void runCommandClavier()
 {
   char key = keypad.getKey();
-
-  if (key)
-  {
-    Serial.println(key);
-  }
-
+  if (key) { Serial.println(key); }
   switch (key)
   {
   case '1':

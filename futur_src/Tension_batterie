@@ -1,0 +1,46 @@
+/* Mesure de la tension d’une batterie LiPo 1S 3.7V
+http://drivintheworld.com/tp4056/
+
+TP4056 <——–> LiPo 1S 3.7 V
+A0 <——–> R = 1Khoms OUT +
+A0 <——–> R = 220 homs OUT – ET GND
+
+GND<——–> OUT –
+B+ <——–> Borne + de la batterie LiPo
+B- <——–> Borne – de la batterie LiPo
+
+*/
+
+int nb_boucles=0;
+
+void setup() { Serial.begin(15200); }
+
+void loop() {
+if (nb_boucles++ > 5)
+{
+nb_boucles=0;
+int valeurA0 = analogRead(A0); // AnalogRead renvoi une valeur entre 0 et 1023
+//on a un pont diviseur de tension avec
+// R1 = 1K
+// R2 = 220
+//La Tension mesurée sera : Vs = Vin * ( R2 / ( R1 + R2) )
+//Pour une LiPo de 3.7 Volts, on aura : 3,7*(220/(1000+220))=0.668
+// Par conséquent, Vin = Vs / ( R2 / ( R1 + R2) )
+// Soit Vin = tension / ( 220 / ( 1000 + 220) )
+
+float tension = valeurA0 * (3.0 / 1023.0); // 1023 correspond à 3 Volts
+float tensionRedressee = tension / ( (float)220 / ( 1000 + 220) );
+float redressement = (float)220 / (1000 + 220);
+// Il faut convertir le 220 en float, sinon, le résultat de 220 / (1000 + 220)est égal à 0
+
+//Serial.print(« valeurA0 = « );
+//Serial.print(valeurA0);
+Serial.print( » tension = « );
+Serial.print(tension);
+Serial.print( » V »);
+//Serial.print( » tensionRedressée = « );
+//Serial.print(tensionRedressee);
+//Serial.println( » V »);
+}
+delay(1000);
+}
