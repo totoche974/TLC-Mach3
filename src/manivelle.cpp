@@ -3,8 +3,8 @@
 #include <AiEsp32RotaryEncoder.h>
 
 #include "boutonMach3.h"
-#include "selector.h"
 #include "screen.h"
+#include "axe.h"
 
 extern BleKeyboard Keyboard;
 
@@ -49,21 +49,14 @@ const int KEY_4 = KEY_LEFT_ARROW;  // 37; // KEY_LEFT_ARROW; //100; // 52; // X-
 const int KEY_6 = KEY_RIGHT_ARROW; // 39; // KEY_RIGHT_ARROW; // 102; // 54; // X+ : 102
 const int KEY_8 = KEY_UP_ARROW;    // 38;
 
-enum Axe
-{
-  Axe_x,
-  Axe_y,
-  Axe_z,
-  Axe_a
-};
-
-Axe selectedAxe = Axe_x;
+Axe currentAxe = Axe_x;
+Axe previousAxe = Axe_x;
 uint8_t selectedAxePositiveKey;
 uint8_t selectedAxeNegativeKey;
 
-void printAxe()
+void printAxe(Axe axeValue)
 {
-  switch (selectedAxe)
+  switch (axeValue)
   {
   case Axe_x:
     printf("Axe X\n");
@@ -86,34 +79,46 @@ void printAxe()
 
 void selectAxe()
 {
-  if ((digitalRead(PIN_AXE_X) == LOW) && selectedAxe != Axe_x)
+  currentAxe = getCurrentAxe();
+
+  if (previousAxe != currentAxe)
   {
-    selectedAxePositiveKey = KEY_4; // ACSII 4 : 52
-    selectedAxeNegativeKey = KEY_6; // ACSII 6 : 54
-    selectedAxe = Axe_x;
-    printAxe();
+    switch (currentAxe)
+    {
+    case Axe_x:
+    {
+      selectedAxePositiveKey = KEY_4; // ACSII 4 : 52
+      selectedAxeNegativeKey = KEY_6; // ACSII 6 : 54
+      // selectedAxe = Axe_x;
+      break;
+    }
+    case Axe_y:
+    {
+      selectedAxePositiveKey = KEY_8; // ACSII 8 : 56
+      selectedAxeNegativeKey = KEY_2; // ACSII 2 : 50
+      // selectedAxe = Axe_y;
+      break;
+    }
+    case Axe_z:
+    {
+      selectedAxePositiveKey = KEY_PAGE_UP;
+      selectedAxeNegativeKey = KEY_PAGE_DOWN;
+      // selectedAxe = Axe_z;
+      break;
+    }
+    case Axe_a:
+    {
+      selectedAxePositiveKey = KEY_HOME;
+      selectedAxeNegativeKey = KEY_END;
+      // selectedAxe = Axe_a;
+      break;
+    }
+    }
+
+    printAxe(currentAxe);
   }
-  if ((digitalRead(PIN_AXE_Y) == LOW) && selectedAxe != Axe_y)
-  {
-    selectedAxePositiveKey = KEY_8; // ACSII 8 : 56
-    selectedAxeNegativeKey = KEY_2; // ACSII 2 : 50
-    selectedAxe = Axe_y;
-    printAxe();
-  }
-  if ((digitalRead(PIN_AXE_Z) == LOW) && selectedAxe != Axe_z)
-  {
-    selectedAxePositiveKey = KEY_PAGE_UP;
-    selectedAxeNegativeKey = KEY_PAGE_DOWN;
-    selectedAxe = Axe_z;
-    printAxe();
-  }
-  if ((digitalRead(PIN_AXE_A) == LOW) && selectedAxe != Axe_a)
-  {
-    selectedAxePositiveKey = KEY_HOME;
-    selectedAxeNegativeKey = KEY_END;
-    selectedAxe = Axe_a;
-    printAxe();
-  }
+
+  previousAxe = currentAxe;
 }
 
 void manivelle()
@@ -126,7 +131,7 @@ void manivelle()
   { // Touche Ctrl à droite ou à gauche
     if (deltaEncoder != 0)
     {
-      printAxe();
+      printAxe(getCurrentAxe());
       printf("deltaEncoder: %d\n", deltaEncoder);
     }
     if (deltaEncoder > 0)

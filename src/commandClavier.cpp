@@ -7,6 +7,7 @@
 #include "commandClavier.h"
 
 #include "screen.h"
+#include "axe.h"
 
 extern BleKeyboard Keyboard;
 
@@ -39,10 +40,10 @@ Keypad_I2C keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS, KEYPAD_ADDRESS
 
 void DisableWifi()
 {
- WiFi.disconnect();
- WiFi.mode(WIFI_OFF);
- delay(1);
- //screenSendMessage("WIFI OFF");
+  WiFi.disconnect();
+  WiFi.mode(WIFI_OFF);
+  delay(1);
+  //screenSendMessage("WIFI OFF");
 }
 
 void initCommandClavier()
@@ -50,6 +51,7 @@ void initCommandClavier()
   jwire->begin();
   jwire->setClock(400000);
   keypad.begin();
+  keypad.setHoldTime(1);
 }
 
 // extern BleKeyboard Keyboard;
@@ -108,47 +110,15 @@ void Command_6(char key)
 
 void Command_7(char key)
 {
-// État d'activation de la tempo
-int tempoActive = 0; int tempoStop = 0;
-// Temps à l'activation de la tempo
-unsigned long tempoDepart = 0;
-
-  // Si le bouton est enfoncé,
-  if (keypad.getState() == PRESSED ){
-    if (key == '7') {
-      Serial.println("on démare la temporisation"); 
-      tempoActive = 1;
-      tempoDepart = millis();
-    }
-    // Si le bouton est relache,
-    else if ( keypad.stateChanged == IDLE ) {
-        Serial.println("on arrete la temporisation"); 
-        tempoStop = millis() - tempoDepart ;
-        
-      }
-     
-  }
-  Serial.print("tempoStop = "); Serial.println(tempoStop); tempoActive = 0; tempoStop = 0; 
+  Serial.print("key = ");
+  Serial.println(key);
+  screenSendMessage(" 7: Not used");
 }
-  /*
-  // Si la temporisation est active,
-    
-  if ( tempoActive ) {
-  // Et si il s'est écoulé + de 300 ms,
-  if ( ( millis() - tempoDepart ) >= 1000 ) {
-   // Alors on affiche
-    Serial.println("Référencement de tout les axes");
-    }
-    else { Serial.println("On référence l'axe sélectionné "); }
-    // on désactive la temporisation pour ne pas afficher ce message une seconde fois
-  tempoActive = 0;  
-  } 
-}
-*/
 
 void Command_8(char key)
 {
-  Serial.print("key = "); Serial.println(key);
+  Serial.print("key = ");
+  Serial.println(key);
   screenSendMessage("  Home");
 }
 
@@ -164,7 +134,7 @@ void Command_0(char key)
   Serial.print("key = ");
   Serial.println(key);
   screenSendMessage("  Z Haut");
-}  
+}
 
 void Command_A(char key)
 {
@@ -203,19 +173,156 @@ void Command_F(char key)
   Serial.println(key);
 }
 
-void keypadEvent(KeypadEvent key){
-if (keypad.getState() == PRESSED ){
-   if (key == '7') {
-    Serial.println("On reference");
-    }
+/**
+ * @brief Detection de l'appui long ou court pour le référencement des axes
+ * Si BT pressé, éxécution du référencement de tous les axes 
+ * si BT préssé < de 300ms , référencement de l'axe sélectionné
+ * 
+ * https://forum.pjrc.com/threads/48615-keypad-library-how-to-differentiate-between-momentary-switch-and-toggle-switch
+ */
 
+boolean tempoActive = false;
+unsigned long tempoDepart;
+#define THRESHOLD_SHORT_HOLD_TIME 300 // Durée miniuma de l'appui sur le bouton
+const uint8_t NB_AUTORISED_BUTTON = 2;
+char authorisedBouton[NB_AUTORISED_BUTTON] = {'B', 'C'};
+
+bool isAuthoriseKey(char key)
+{
+  bool found = false;
+  for (int i = 0; i < NB_AUTORISED_BUTTON; ++i)
+  {
+    if (authorisedBouton[i] == key)
+    {
+      found = true;
+      break;
+    }
   }
-} 
+  return found;
+}
+
+enum pressState
+{
+  In_progress,
+  Finished,
+};
+struct shortPressedResult
+{
+  pressState state;
+  bool isShort;
+};
+
+shortPressedResult isShortPressed()
+{
+  shortPressedResult res;
+  // Serial.println("keypad.getState() : " + String(keypad.getState()));
+  // Si le bouton est enfoncé,
+  if (!tempoActive && (keypad.getState() == PRESSED))
+  {
+    tempoActive = true;
+    tempoDepart = millis();
+    // Serial.println("on démare la temporisation");
+    // Serial.println("00 tempoDepart : " + String(tempoDepart));
+  }
+
+  // Si le bouton est relache,
+  if (tempoActive && (keypad.getState() == RELEASED))
+  {
+    tempoActive = false;
+    unsigned long tempoStop = millis();
+    unsigned long elapseTime = tempoStop - tempoDepart;
+    // Serial.println("on ARRETE la temporisation");
+    // Serial.println("11 tempoDepart : " + String(tempoDepart));
+    // Serial.println("tempoStop : " + String(tempoStop));
+    // Serial.println("elapseTime : " + String(elapseTime));
+    if (elapseTime < THRESHOLD_SHORT_HOLD_TIME)
+    {
+      res.state = pressState::Finished;
+      res.isShort = true;
+      return res;
+    }
+    else
+    {
+      res.state = pressState::Finished;
+      res.isShort = false;
+      return res;
+    }
+  }
+
+  res.state = pressState::In_progress;
+  res.isShort = false;
+  return res;
+}
+
+//
+void managePressBoutonShortLong()
+{
+  // Sanity check
+  char key = keypad.key[0].kchar;
+  if ((keypad.getState() == IDLE) || (!isAuthoriseKey(key)))
+  {
+    return;
+  }
+
+  shortPressedResult resultIsShortPressed = isShortPressed();
+  if (resultIsShortPressed.state != pressState::Finished)
+  {
+    return;
+  }
+
+  bool isShortPressed = resultIsShortPressed.isShort;
+
+  if (isShortPressed)
+  {
+    switch (key)
+    {
+    case 'B':
+      screenSendMessage("Ref. XYZ");
+      break;
+    case 'C':
+      screenSendMessage("Ref. CCC");
+      break;
+    }
+  }
+  else
+  {
+    String toPrint = "Ref. Axe ";
+    switch (getCurrentAxe())
+    {
+    case Axe_x:
+    {
+      toPrint += "X";
+      break;
+    }
+    case Axe_y:
+    {
+      toPrint += "Y";
+      break;
+    }
+    case Axe_z:
+    {
+      toPrint += "Z";
+      break;
+    }
+    case Axe_a:
+    {
+      toPrint += "A";
+      break;
+    }
+    }
+    screenSendMessage(toPrint);
+  }
+}
 
 void runCommandClavier()
 {
   char key = keypad.getKey();
-  if (key) { Serial.println(key); }
+
+  managePressBoutonShortLong();
+  if (key)
+  {
+    Serial.println(key);
+  }
   switch (key)
   {
   case '1':
@@ -267,60 +374,10 @@ void runCommandClavier()
     Command_F(key);
     break;
 
+    // default:
+    //   Serial.print("DEFAULT key = ");
+    //   Serial.println(key);
+    //   break;
+
   } // fin du switch
 }
-
-//  if (Keyboard.isConnected() && customKey != NO_KEY)
-//  {
-//    switch (customKey)
-//    {
-//    case '1': Command_1(customKey); break;
-//    case '2': Command_2(customKey); break;
-// //   case '3':
-// //     Command_3(newkey);
-// //     break;
-// //   case '4':
-// //     Command_4(newkey);
-// //     break;
-// //   case '5':
-// //     Command_5(newkey);
-// //     break;
-// //   case '6':
-// //     Command_6(newkey);
-// //     break;
-// //   case '7':
-// //     Command_7(newkey);
-// //     break;
-// //   case '8':
-// //     Command_8(newkey);
-// //     break;
-// //   case '9':
-// //     Command_9(newkey);
-// //     break;
-// //   case '0':
-// //     Command_0(newkey);
-// //     break;
-// //   case 'A':
-// //     Command_0(newkey);
-// //     break;
-// //   case 'B':
-// //     Command_0(newkey);
-// //     break;
-// //   case 'C':
-// //     Command_0(newkey);
-// //     break;
-// //   case 'D':
-// //     Command_0(newkey);
-// //     break;
-// //   case 'E':
-// //     Command_0(newkey);
-// //     break;
-// //   case 'F':
-// //     Command_0(newkey);
-// //     break;
-
-//    } // fin du switch
-
-//  } // fin du if Keyboard.isConnected
-
-//}// fin du test btSecu
