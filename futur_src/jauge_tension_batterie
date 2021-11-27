@@ -1,0 +1,65 @@
+/***************************************************** 
+ 
+Affichage d'une mesure analogique sur un écran OLED
+SH1106 I2C (Arduino)
+Utilisation d'une bibliothèque d'Adafruit:
+  https://github.com/adafruit/Adafruit-GFX-Library
+  ...et d'une bibliothèque compatible par Wohho-maker:
+  https://github.com/wonho-maker/Adafruit_SH1106
+  
+  Plus d'infos:
+  https://electroniqueamateur.blogspot.com/2019/01/ecran-oled-sh1106-i2c-et-arduino.html
+*****************************************************/
+
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SH1106.h>
+
+Adafruit_SH1106 display(23); 
+
+void setup() {
+  display.begin();
+  display.clearDisplay();
+}
+
+void loop() {
+
+  int valeur;
+
+  // mesure de la tension à l'entrée A0
+
+  valeur = map(analogRead(A0), 0, 1023, 0, 500);
+
+  // on écrit "tension", en petits caractères, centré en haut de l'écran:
+
+  display.setCursor(40, 8);
+  display.setTextColor(WHITE);
+  display.setTextSize(1);
+
+  display.println("Tension:");
+
+  // on écrit la valeur numérique de la tension un peu plus bas, en plus gros
+  display.setCursor(30, 22);
+  display.setTextSize(2);
+
+  display.print(valeur/100); // partie entière
+  display.print(",");  // virgule
+  
+  if ((valeur % 100) < 10){  
+    display.print("0");
+  }
+  display.print(valeur % 100);  // partie décimale, après la virgules
+  display.println(" V"); // unités de mesure
+
+  // enveloppe de la jauge rectangulaire
+  display.fillRect( 14, 45, 104, 10, BLACK);
+  display.drawRect( 14, 45, 104, 10, WHITE);
+  // partie mobile de la jauge rectangulaire
+  display.fillRect( 16, 47, map(valeur, 0, 500, 0, 100), 6, WHITE);
+
+  display.display();
+
+  delay(500);
+  display.clearDisplay();
+
+}

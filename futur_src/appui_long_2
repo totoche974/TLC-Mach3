@@ -1,0 +1,31 @@
+define BUTTON_POLLING_INTERVAL 20          //intervalles de lecture du bouton, en ms
+#define COUNT_DEBOUNCE 10                   //durée maximale autorisée de relâchement du bouton (en nombre d'intervalles)
+#define COUNT_SHORT_PRESS 5                 //durée mini d'un appui court (en nombre d'intervalles)
+#define COUNT_LONG_PRESS 50                 //durée d'un appui long (en nombre d'intervalles)
+
+unsigned int releasedCount = 0;
+unsigned totalCount = 0;
+
+//comptage du temps d appui et anti-rebonds
+while(totalCount<COUNT_LONG_PRESS){
+    tempo(BUTTON_POLLING_INTERVAL);
+    if(BUTTONPIN){
+        releasedCount=0;
+        totalCount++;
+    }
+    else{
+        releasedCount++;
+    }
+    if(releasedCount>=COUNT_DEBOUNCE){
+        break;
+    }
+}
+
+//execution des actions apres appui
+if(totalCount==COUNT_LONG_PRESS){
+    //inserer ici action appui long
+    while(BUTTONPIN);
+}
+else if(totalCount>COUNT_SHORT_PRESS){
+    //inserer ici action appui bref
+}
