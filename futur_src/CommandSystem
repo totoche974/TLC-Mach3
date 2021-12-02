@@ -1,0 +1,15 @@
+void DisableWifi()
+{
+  WiFi.disconnect();
+  WiFi.mode(WIFI_OFF);
+  delay(1);
+  screenSendMessage("WIFI OFF");
+}
+
+void DeepSleep()
+{
+esp_sleep_enable_ext0_wakeup(GPIO_NUM_14,LOW);
+esp_deep_sleep_start();
+screenSendMessage("LIGHT SLEEP");
+}
+

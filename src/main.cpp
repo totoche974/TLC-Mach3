@@ -30,9 +30,7 @@ uint32_t lastKeyPressed = 0;
 void setup()
 {
   Serial.begin(115200);
-  while (!Serial)
-  { /*wait*/
-  }
+  while (!Serial) { /*wait*/ }
   //Serial.println("Starting Télécommande BLE mach3");
   
   Keyboard.begin();
@@ -58,19 +56,8 @@ void setup()
   screenSendMessage("TLC-M3 ON");
 }
 
-
-
-/**
- * @file fonction correspondantes au fichier :btMach3.cpp - cmdClavier.cpp - manivelle.cpp
- * @author
- * @brief Boutton de commande : STOP - PAUSE - ARRET
- *
- * @copyright Copyright (c) 2020
- *
- */
 void loop()
 {
-  // Bouton mach3: STOP - PAUSE - START
   btMach3(PIN_ARRET_BT);
   btMach3(PIN_PAUSE_BT);
   btMach3(PIN_START_BT);

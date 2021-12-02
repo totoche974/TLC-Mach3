@@ -72,5 +72,5 @@ void loopScreen()
 
   long elapseTime = millis() - startMessage;
 
-  if (10000 < elapseTime) { messageToPrint = ""; } //Délai d'affichage du message limité à 10 secondes
+  if (5000 < elapseTime) { messageToPrint = ""; } //Délai d'affichage du message limité à 5 secondes
 }

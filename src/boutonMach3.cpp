@@ -92,10 +92,10 @@ void btMach3(uint8_t pinNb)
         case PIN_PAUSE_BT:
           //printf("PAUSE\n");
           screenSendMessage("  PAUSE  ");
-          Keyboard.press(32);
+          Keyboard.press(32); // touche BACKSPACE
           delay(100);
           Keyboard.releaseAll();
-          break; // touche BACKSPACE
+          break;
         case PIN_START_BT:
           //printf("START\n");
           screenSendMessage("  START  ");
