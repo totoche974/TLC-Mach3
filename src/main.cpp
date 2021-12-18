@@ -21,46 +21,47 @@
 #include "manivelle.h"
 #include "selector.h"
 #include "screen.h"
+#include "sleep.h"
 
 BleKeyboard Keyboard("ESP32 Bluetooth clavier", "Espressif", 80);
-
-uint32_t start, stop;
-uint32_t lastKeyPressed = 0;
 
 void setup()
 {
   Serial.begin(115200);
-  while (!Serial) { /*wait*/ }
-  //Serial.println("Starting Télécommande BLE mach3");
-  
+  while (!Serial)
+  { /*wait*/
+  }
+  // Serial.println("Starting Télécommande BLE mach3");
+
   Keyboard.begin();
 
   initCommandClavier();
   initManivelle();
   initScreen();
-  
+
   // Bouton de sécurité pour la manivelle et le clavier
   pinMode(PIN_SECU_BT, INPUT_PULLUP);
+  pinMode(PIN_START_BT, INPUT_PULLUP);
+  pinMode(PIN_PAUSE_BT, INPUT_PULLUP);
+  pinMode(PIN_ARRET_BT, INPUT_PULLUP);
 
   pinMode(PIN_AXE_X, INPUT_PULLUP);
   pinMode(PIN_AXE_Y, INPUT_PULLUP);
   pinMode(PIN_AXE_Z, INPUT_PULLUP);
   pinMode(PIN_AXE_A, INPUT_PULLUP);
 
-  pinMode(PIN_START_BT, INPUT_PULLUP);
-  pinMode(PIN_PAUSE_BT, INPUT_PULLUP);
-  pinMode(PIN_ARRET_BT, INPUT_PULLUP);
+  initSleep();
 
-  //DisableWifi();
-  
+  printf("digitalRead(PIN_SECU_BT): %d\n", digitalRead(PIN_SECU_BT));
+  printf("LOW %d\n", LOW);
+  printf("HIGH %d\n", HIGH);
+
   screenSendMessage("TLC-M3 ON");
 }
 
 void loop()
 {
-  btMach3(PIN_ARRET_BT);
-  btMach3(PIN_PAUSE_BT);
-  btMach3(PIN_START_BT);
+  checkMainBouton();
 
   manivelle();
 
@@ -68,4 +69,5 @@ void loop()
 
   loopScreen();
 
+  shouldSleep();
 } // end loop

@@ -1,6 +1,7 @@
 {
     "files.associations": {
-        "istream": "cpp"
+        "istream": "cpp",
+        "new": "cpp"
     },
     "files.eol": "\n"
 }

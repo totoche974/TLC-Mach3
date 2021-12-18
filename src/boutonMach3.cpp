@@ -1,17 +1,14 @@
 #include <Arduino.h>
 #include <BleKeyboard.h>
 
-#include "boutonMach3.h"
-
+#include "sleep.h"
 #include "screen.h"
+#include "boutonMach3.h"
 
 // BleKeyboard Keyboard("ESP32 Bluetooth clavier", "Espressif", 80);
 extern BleKeyboard Keyboard;
 
 const unsigned antiRebond = 10;
-
-// LOW: 0
-// HIGH: 1
 
 const uint8_t NB_BUTTON = 3;
 
@@ -21,26 +18,33 @@ bool oldBtStatus[NB_BUTTON] = {1, 1, 1};
 bool btStatus[NB_BUTTON] = {HIGH, HIGH, HIGH};
 unsigned long lastAntiRebond[NB_BUTTON] = {0, 0, 0};
 
+void checkMainBouton()
+{
+  btMach3(PIN_ARRET_BT);
+  btMach3(PIN_PAUSE_BT);
+  btMach3(PIN_START_BT);
+}
+
 /**
  * @brief Mise en someil leger
- * 
- * @param GPIO 14 (bt secu) 
- * @return  
+ *
+ * @param GPIO 14 (bt secu)
+ * @return
  */
 
-void dodo()
-  {
-    esp_sleep_enable_ext0_wakeup(GPIO_NUM_14,LOW);
-    int ret = esp_light_sleep_start();
-    screenSendMessage("Au Dodo...");
-    Serial.println(ret);
-  }
+// void dodo()
+//   {
+//     esp_sleep_enable_ext0_wakeup(GPIO_NUM_14,LOW);
+//     int ret = esp_light_sleep_start();
+//     screenSendMessage("Au Dodo...");
+//     Serial.println(ret);
+//   }
 
 /**
  * @brief Get the Idx Button object
- * 
- * @param buttonPinNb 
- * @return int 
+ *
+ * @param buttonPinNb
+ * @return int
  */
 
 int getIdxButton(uint8_t buttonPinNb)
@@ -55,7 +59,7 @@ int getIdxButton(uint8_t buttonPinNb)
   return 0;
 }
 
-void btMach3(uint8_t pinNb)
+void btMach3(int pinNb)
 {
 
   int lireBt = digitalRead(pinNb);
@@ -76,33 +80,39 @@ void btMach3(uint8_t pinNb)
       btStatus[idx] = lireBt;
 
       // printf("PASS 3\n");
-      if (lireBt != HIGH)
+      if (lireBt == LOW)
       {
-        // printf("PASS 4\n");
+        // printf("pinNb %d\n", pinNb);
+        // printf("PIN_ARRET_BT %d\n", PIN_ARRET_BT);
+        // printf("PIN_PAUSE_BT %d\n", PIN_PAUSE_BT);
+        // printf("PIN_START_BT %d\n", PIN_START_BT);
         switch (pinNb)
         {
         case PIN_ARRET_BT:
-          //printf("ARRET\n");
+          // printf("ARRET\n");
           screenSendMessage("  ARRET  ");
           Keyboard.press(KEY_LEFT_ALT);
           Keyboard.press(115); // touche LEFT_ALT + touche "s" en minuscule
           delay(100);
           Keyboard.releaseAll();
+          refreshSleepOriginTimestamp();
           break;
         case PIN_PAUSE_BT:
-          //printf("PAUSE\n");
+          // printf("PAUSE\n");
           screenSendMessage("  PAUSE  ");
           Keyboard.press(32); // touche BACKSPACE
           delay(100);
           Keyboard.releaseAll();
+          refreshSleepOriginTimestamp();
           break;
         case PIN_START_BT:
-          //printf("START\n");
+          // printf("START\n");
           screenSendMessage("  START  ");
           Keyboard.press(KEY_LEFT_ALT);
           Keyboard.press(114); // touche LEFT_ALT + touche "r" en minuscule
           delay(100);
           Keyboard.releaseAll();
+          refreshSleepOriginTimestamp();
           break;
         } // fin du switch
       }   // fin du 4eme if

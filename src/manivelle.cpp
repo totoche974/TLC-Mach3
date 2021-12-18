@@ -4,6 +4,7 @@
 
 #include "boutonMach3.h"
 #include "screen.h"
+#include "sleep.h"
 #include "axe.h"
 
 extern BleKeyboard Keyboard;
@@ -17,14 +18,14 @@ extern BleKeyboard Keyboard;
 
 // extern BleKeyboard Keyboard;
 
-//instead of changing here, rather change numbers above
+// instead of changing here, rather change numbers above
 AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN,
                                                           ROTARY_ENCODER_BUTTON_PIN, ROTARY_ENCODER_VCC_PIN,
                                                           ROTARY_ENCODER_STEPS);
 
 void initManivelle()
 {
-  //we must initialize rotary encoder
+  // we must initialize rotary encoder
   rotaryEncoder.begin();
 
   rotaryEncoder.setup(
@@ -89,16 +90,20 @@ void selectAxe()
     {
       selectedAxePositiveKey = KEY_4; // ACSII 4 : 52
       selectedAxeNegativeKey = KEY_6; // ACSII 6 : 54
-      //selectedAxe = Axe_x;
-      Serial.print("currentAxe__X = ");Serial.println(currentAxe);
+      // selectedAxe = Axe_x;
+      Serial.print("currentAxe__X = ");
+      Serial.println(currentAxe);
+      refreshSleepOriginTimestamp();
       break;
     }
     case Axe_y:
     {
       selectedAxePositiveKey = KEY_8; // ACSII 8 : 56
       selectedAxeNegativeKey = KEY_2; // ACSII 2 : 50
-      // selectedAxe = Axe_y;
-       Serial.print("currentAxe__Y = ");Serial.println(currentAxe);
+                                      // selectedAxe = Axe_y;
+      Serial.print("currentAxe__Y = ");
+      Serial.println(currentAxe);
+      refreshSleepOriginTimestamp();
       break;
     }
     case Axe_z:
@@ -106,7 +111,9 @@ void selectAxe()
       selectedAxePositiveKey = KEY_PAGE_UP;
       selectedAxeNegativeKey = KEY_PAGE_DOWN;
       // selectedAxe = Axe_z;
-       Serial.print("currentAxe__Z = ");Serial.println(currentAxe);
+      Serial.print("currentAxe__Z = ");
+      Serial.println(currentAxe);
+      refreshSleepOriginTimestamp();
       break;
     }
     case Axe_a:
@@ -114,7 +121,9 @@ void selectAxe()
       selectedAxePositiveKey = KEY_HOME;
       selectedAxeNegativeKey = KEY_END;
       // selectedAxe = Axe_a;
-       Serial.print("currentAxe__A = ");Serial.println(currentAxe);
+      Serial.print("currentAxe__A = ");
+      Serial.println(currentAxe);
+      refreshSleepOriginTimestamp();
       break;
     }
     }
@@ -127,14 +136,15 @@ void selectAxe()
 
 void manivelle()
 {
-  //Serial.print("PIN_SECU_BT = "); Serial.println(digitalRead(PIN_SECU_BT));
+  // Serial.print("PIN_SECU_BT = "); Serial.println(digitalRead(PIN_SECU_BT));
   selectAxe();
 
   int currentEncoderPosition = -rotaryEncoder.readEncoder();
   int deltaEncoder = currentEncoderPosition - previousEncoderPosition;
   if ((digitalRead(PIN_SECU_BT) == LOW))
-  { /* Touche Ctrl à droite ou à gauche*/ 
-  Serial.print("PIN_SECU_BT = "); Serial.println(digitalRead(PIN_SECU_BT));
+  { /* Touche Ctrl à droite ou à gauche*/
+    refreshSleepOriginTimestamp();
+    // Serial.print("PIN_SECU_BT = "); Serial.println(digitalRead(PIN_SECU_BT));
     if (deltaEncoder != 0)
     {
       printAxe(getCurrentAxe());

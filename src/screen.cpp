@@ -3,6 +3,7 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include "screen.h"
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
@@ -23,7 +24,7 @@ TwoWire *wire = NULL;
 // *** Initialise the screen
 void initScreen()
 {
-  //display = new Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+  // display = new Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
   display = new Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
   if (!display->begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS))
@@ -38,6 +39,12 @@ void initScreen()
   display->display();
   delay(2000); // Pause de 2 seconds
 
+  clearDisplay();
+}
+
+// *** Clear the screen
+void clearDisplay()
+{
   // Clear the buffer
   display->clearDisplay();
 
@@ -64,13 +71,20 @@ void loopScreen()
 
     display->setTextSize(2); // Draw 2X-scale text
     display->setTextColor(SSD1306_WHITE);
-    display->setCursor(0,16);
-        display->println(F(messageToPrint.c_str()));
-        display->display(); // Show initial text
+    display->setCursor(0, 16);
+    display->println(F(messageToPrint.c_str()));
+    display->display(); // Show initial text
   }
-  else { display->clearDisplay(); display->display(); }
+  else
+  {
+    display->clearDisplay();
+    display->display();
+  }
 
   long elapseTime = millis() - startMessage;
 
-  if (5000 < elapseTime) { messageToPrint = ""; } //Délai d'affichage du message limité à 5 secondes
+  if (5000 < elapseTime)
+  {
+    messageToPrint = "";
+  } // Délai d'affichage du message limité à 5 secondes
 }
