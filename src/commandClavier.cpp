@@ -95,7 +95,7 @@ void Command_6(char key)
 void Command_7(char key)
 {
   Serial.print("Key = "); Serial.println(key);
-  screenSendMessage("XY=0 table");
+  screenSendMessage("XY=0 Work");
   Keyboard.press(KEY_F2); delay(50); Keyboard.release(KEY_F2); // touche F2  
 }
 
@@ -130,7 +130,7 @@ void Command_A(char key)
 void Command_B(char key)
 {
   Serial.print("key = "); Serial.println(key);
-  screenSendMessage(" Ref: XYZ");
+  screenSendMessage(" Ref. XYZ");
   Keyboard.press(KEY_LEFT_CTRL); delay(50); Keyboard.release(KEY_F8); // touche Ctrl + F8 
 }
 
@@ -159,7 +159,7 @@ void Command_F(char key)
 }
 
 /**
- * @brief Detection de l'appui long ou court pour le référencement des axes
+ * @brief Detection de l'appui long ou court pour la mise à zéro des axes
  * Si BT pressé, < de 300ms éxécution de la remise à zéro de tous les axes 
  * si BT préssé > de 300ms , remise à zéro de l'axe sélectionné
  * 
@@ -271,13 +271,13 @@ void managePressBoutonShortLong()
     {
     case Axe_x: { toPrint += "X = 0"; Keyboard.press(KEY_LEFT_CTRL); Keyboard.press(KEY_F3); delay(50); Keyboard.releaseAll(); break; }
     case Axe_y: { toPrint += "Y = 0"; Keyboard.press(KEY_LEFT_CTRL); Keyboard.press(KEY_F4); delay(50); Keyboard.releaseAll(); break; }
-    case Axe_z: { toPrint += "Z = 0"; Keyboard.press(KEY_LEFT_CTRL); Keyboard.press(KEY_F6); delay(50); Keyboard.releaseAll(); break; }
-    case Axe_a: { toPrint += "A = 0"; Keyboard.press(KEY_LEFT_CTRL); Keyboard.press(KEY_F5); delay(50); Keyboard.releaseAll(); break; }
+    case Axe_z: { toPrint += "Z = 0"; Keyboard.press(KEY_LEFT_CTRL); Keyboard.press(KEY_F5); delay(50); Keyboard.releaseAll(); break; }
+    case Axe_a: { toPrint += "A = 0"; Keyboard.press(KEY_LEFT_CTRL); Keyboard.press(KEY_F6); delay(50); Keyboard.releaseAll(); break; }
     }
     screenSendMessage(toPrint);
   } // fin du else
 
-  //else if ((key == '9')) { } 
+  //else if ((key == 'au choix')) { } 
 
 } // Fin de la fonction
 
