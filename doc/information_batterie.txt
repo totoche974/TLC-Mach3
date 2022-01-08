@@ -1,0 +1,6 @@
+
+4.2V complétement chargé
+3.3V en fonction
+3.7V en normal
+3.0V en minimal/critique
+
