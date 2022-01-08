@@ -32,14 +32,6 @@ void checkMainBouton()
  * @return
  */
 
-// void dodo()
-//   {
-//     esp_sleep_enable_ext0_wakeup(GPIO_NUM_14,LOW);
-//     int ret = esp_light_sleep_start();
-//     screenSendMessage("Au Dodo...");
-//     Serial.println(ret);
-//   }
-
 /**
  * @brief Get the Idx Button object
  *
