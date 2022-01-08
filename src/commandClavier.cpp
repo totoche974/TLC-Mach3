@@ -38,10 +38,12 @@ byte rowPins[ROWS] = {lig_1, lig_2, lig_3, lig_4};
 byte colPins[COLS] = {col_1, col_2, col_3, col_4};
 
 TwoWire *jwire = &Wire; // test passing pointer to keypad lib
+
 Keypad_I2C keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS, KEYPAD_ADDRESS, PCF8574, jwire);
 
 void initCommandClavier()
 {
+  jwire->setPins(PIN_SDA, PIN_SCL);
   jwire->begin();
   jwire->setClock(400000);
   keypad.begin();
