@@ -6,10 +6,8 @@
 #include <Arduino.h>
 
 /**
- * @note Ajout de resistance de 10K pour passer les
- * pins 34 et 35 en PULLUP
- *
- * Obligation d'appuyer sur le bouton (PIN_SECU_BT) pour pouvoir utiliser la manivelle
+ * @note Obligation d'appuyer sur le bouton (PIN_SECU_BT) pour pouvoir utiliser la manivelle
+ *  
  */
 
 const uint8_t PIN_AXE_X = GPIO_NUM_5;

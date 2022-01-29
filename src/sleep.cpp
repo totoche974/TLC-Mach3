@@ -5,6 +5,7 @@
 #include "sleep.h"
 
 int sleepThreshold = 5 * 60 * 1000; // 5 minutes
+// int sleepThreshold = 3000; // test 3 secondes
 
 ulong lastActivityTimestamp = 0;
 
@@ -64,11 +65,16 @@ void shouldSleep()
         printf("START SLEEP\n");
         Serial.flush();
 
+        setCpuFrequencyMhz(80);
+
         esp_light_sleep_start();
         refreshSleepOriginTimestamp();
         printf("WAKEUP\n");
         Serial.flush();
         screenSendMessage("  WAKEUP  ");
+
+        setCpuFrequencyMhz(240);
+
         // printf("digitalRead(PIN_START_BT): %d\n", digitalRead(PIN_START_BT));
         // printf("digitalRead(PIN_PAUSE_BT): %d\n", digitalRead(PIN_PAUSE_BT));
         // printf("digitalRead(PIN_ARRET_BT): %d\n", digitalRead(PIN_ARRET_BT));
