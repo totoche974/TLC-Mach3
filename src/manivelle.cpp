@@ -8,11 +8,11 @@
 #include "sleep.h"
 #include "axe.h"
 
-extern BleKeyboard Keyboard;
+extern BleKeyboard keyboard;
 
 #define ROTARY_ENCODER_STEPS 4
 
-// extern BleKeyboard Keyboard;
+// extern BleKeyboard keyboard;
 
 // instead of changing here, rather change numbers above
 AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN,
@@ -141,21 +141,21 @@ void manivelle()
     {
 
       printf("CodRotIncrement > 0\n");
-      // Keyboard.press(KEY_LEFT_CTRL);
+      // keyboard.press(KEY_LEFT_CTRL);
       printf("commande %d\n\n", selectedAxePositiveKey);
-      Keyboard.press(selectedAxePositiveKey);
+      keyboard.press(selectedAxePositiveKey);
       delay(50);
-      Keyboard.releaseAll();
+      keyboard.releaseAll();
     }
     else if (deltaEncoder < 0)
     {
 
       printf("CodRotIncrement < 0\n");
-      // Keyboard.press(KEY_LEFT_CTRL);
+      // keyboard.press(KEY_LEFT_CTRL);
       printf("commande %d\n\n", selectedAxeNegativeKey);
-      Keyboard.press(selectedAxeNegativeKey);
+      keyboard.press(selectedAxeNegativeKey);
       delay(50);
-      Keyboard.releaseAll();
+      keyboard.releaseAll();
     }
   }
   previousEncoderPosition = currentEncoderPosition;

@@ -11,7 +11,7 @@
 #include "sleep.h"
 #include "axe.h"
 
-extern BleKeyboard Keyboard;
+extern BleKeyboard keyboard;
 
 const uint8_t KEYPAD_ADDRESS = 0x27;
 
@@ -50,18 +50,18 @@ void initCommandClavier()
   keypad.setHoldTime(1);
 }
 
-// extern BleKeyboard Keyboard;
-// BleKeyboard Keyboard("ESP32 Bluetooth clavier", "Espressif", 80);
+// extern BleKeyboard keyboard;
+// BleKeyboard keyboard("ESP32 Bluetooth clavier", "Espressif", 80);
 
 void Command_1(char key)
 {
   Serial.print("key = ");
   Serial.println(key);
   screenSendMessage("Rembobinne");
-  Keyboard.press(KEY_LEFT_CTRL);
-  Keyboard.write(KEY_F12);
+  keyboard.press(KEY_LEFT_CTRL);
+  keyboard.write(KEY_F12);
   delay(50);
-  Keyboard.releaseAll(); // touche Ctrl + touche F12
+  keyboard.releaseAll(); // touche Ctrl + touche F12
 }
 
 void Command_2(char key)
@@ -69,9 +69,9 @@ void Command_2(char key)
   Serial.print("key = ");
   Serial.println(key);
   screenSendMessage("  Z Haut");
-  Keyboard.press(KEY_F3);
+  keyboard.press(KEY_F3);
   delay(50);
-  Keyboard.release(KEY_F3); // touche F3
+  keyboard.release(KEY_F3); // touche F3
 }
 
 void Command_3(char key)
@@ -79,9 +79,9 @@ void Command_3(char key)
   Serial.print("key = ");
   Serial.println(key);
   screenSendMessage(" Parking");
-  Keyboard.press(KEY_F7);
+  keyboard.press(KEY_F7);
   delay(50);
-  Keyboard.release(KEY_F7); // touche F7
+  keyboard.release(KEY_F7); // touche F7
 }
 
 void Command_4(char key)
@@ -89,10 +89,10 @@ void Command_4(char key)
   Serial.print("key = ");
   Serial.println(key);
   screenSendMessage("Lubrifier");
-  Keyboard.press(KEY_LEFT_CTRL);
-  Keyboard.write('f');
+  keyboard.press(KEY_LEFT_CTRL);
+  keyboard.write('f');
   delay(50);
-  Keyboard.releaseAll(); // touche Ctrl + touche "F"
+  keyboard.releaseAll(); // touche Ctrl + touche "F"
 }
 
 void Command_5(char key)
@@ -100,9 +100,9 @@ void Command_5(char key)
   Serial.print("key = ");
   Serial.println(key);
   screenSendMessage("M/A Broche");
-  Keyboard.press(KEY_F5);
+  keyboard.press(KEY_F5);
   delay(50);
-  Keyboard.release(KEY_F5); // touche F5 - M/A broche
+  keyboard.release(KEY_F5); // touche F5 - M/A broche
 }
 
 void Command_6(char key)
@@ -110,9 +110,9 @@ void Command_6(char key)
   Serial.print("key = ");
   Serial.println(key);
   screenSendMessage(" Probe Z");
-  Keyboard.press(KEY_F6);
+  keyboard.press(KEY_F6);
   delay(50);
-  Keyboard.release(KEY_F6); // touche F3
+  keyboard.release(KEY_F6); // touche F3
 }
 
 void Command_7(char key)
@@ -120,9 +120,9 @@ void Command_7(char key)
   Serial.print("Key = ");
   Serial.println(key);
   screenSendMessage("XY=0 Work");
-  Keyboard.press(KEY_F2);
+  keyboard.press(KEY_F2);
   delay(50);
-  Keyboard.release(KEY_F2); // touche F2
+  keyboard.release(KEY_F2); // touche F2
 }
 
 void Command_8(char key)
@@ -130,9 +130,9 @@ void Command_8(char key)
   Serial.print("key = ");
   Serial.println(key);
   screenSendMessage("Select Pas");
-  Keyboard.press(KEY_F8);
+  keyboard.press(KEY_F8);
   delay(50);
-  Keyboard.release(KEY_F8); // touche F8
+  keyboard.release(KEY_F8); // touche F8
 }
 
 void Command_9(char key)
@@ -140,10 +140,10 @@ void Command_9(char key)
   Serial.print("key = ");
   Serial.println(key);
   screenSendMessage("Mod. manuel");
-  Keyboard.press(KEY_LEFT_CTRL);
-  Keyboard.write(74);
+  keyboard.press(KEY_LEFT_CTRL);
+  keyboard.write(74);
   delay(50);
-  Keyboard.releaseAll(); // touche Ctrl + touche "J"
+  keyboard.releaseAll(); // touche Ctrl + touche "J"
 }
 
 void Command_0(char key)
@@ -151,9 +151,9 @@ void Command_0(char key)
   Serial.print("key = ");
   Serial.println(key);
   screenSendMessage("RaZ XY = 0");
-  Keyboard.press(KEY_F9);
+  keyboard.press(KEY_F9);
   delay(50);
-  Keyboard.release(KEY_F9); // touche F9
+  keyboard.release(KEY_F9); // touche F9
 }
 
 void Command_A(char key)
@@ -161,9 +161,9 @@ void Command_A(char key)
   Serial.print("key = ");
   Serial.println(key);
   screenSendMessage(" Home");
-  Keyboard.press(KEY_F4);
+  keyboard.press(KEY_F4);
   delay(50);
-  Keyboard.release(KEY_F4); // touche F4
+  keyboard.release(KEY_F4); // touche F4
 }
 
 void Command_B(char key)
@@ -171,9 +171,9 @@ void Command_B(char key)
   Serial.print("key = ");
   Serial.println(key);
   screenSendMessage(" Ref. XYZ");
-  Keyboard.press(KEY_LEFT_CTRL);
+  keyboard.press(KEY_LEFT_CTRL);
   delay(50);
-  Keyboard.release(KEY_F8); // touche Ctrl + F8
+  keyboard.release(KEY_F8); // touche Ctrl + F8
 }
 
 void Command_C(char key)
@@ -323,37 +323,37 @@ void managePressBoutonShortLong()
     case Axe_x:
     {
       toPrint += "X = 0";
-      Keyboard.press(KEY_LEFT_CTRL);
-      Keyboard.press(KEY_F3);
+      keyboard.press(KEY_LEFT_CTRL);
+      keyboard.press(KEY_F3);
       delay(50);
-      Keyboard.releaseAll();
+      keyboard.releaseAll();
       break;
     }
     case Axe_y:
     {
       toPrint += "Y = 0";
-      Keyboard.press(KEY_LEFT_CTRL);
-      Keyboard.press(KEY_F4);
+      keyboard.press(KEY_LEFT_CTRL);
+      keyboard.press(KEY_F4);
       delay(50);
-      Keyboard.releaseAll();
+      keyboard.releaseAll();
       break;
     }
     case Axe_z:
     {
       toPrint += "Z = 0";
-      Keyboard.press(KEY_LEFT_CTRL);
-      Keyboard.press(KEY_F5);
+      keyboard.press(KEY_LEFT_CTRL);
+      keyboard.press(KEY_F5);
       delay(50);
-      Keyboard.releaseAll();
+      keyboard.releaseAll();
       break;
     }
     case Axe_a:
     {
       toPrint += "A = 0";
-      Keyboard.press(KEY_LEFT_CTRL);
-      Keyboard.press(KEY_F6);
+      keyboard.press(KEY_LEFT_CTRL);
+      keyboard.press(KEY_F6);
       delay(50);
-      Keyboard.releaseAll();
+      keyboard.releaseAll();
       break;
     }
     }

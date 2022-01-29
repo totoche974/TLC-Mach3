@@ -23,7 +23,10 @@
 #include "screen.h"
 #include "sleep.h"
 
-BleKeyboard Keyboard("ESP32 Bluetooth clavier", "Espressif", 80);
+// BleKeyboard keyboard("ESP32 Bluetooth keyboard", "Espressif", 80);
+BleKeyboard keyboard("ESP32 Bluetooth", "Espressif", 80);
+
+long timestampOrigin;
 
 void setup()
 {
@@ -33,7 +36,7 @@ void setup()
   }
   // Serial.println("Starting Télécommande BLE mach3");
 
-  Keyboard.begin();
+  keyboard.begin();
 
   initCommandClavier();
   initManivelle();
@@ -57,10 +60,32 @@ void setup()
   printf("HIGH %d\n", HIGH);
 
   screenSendMessage("TLC-M3 ON");
+
+  timestampOrigin = millis();
+}
+
+void checkBluetoothIsConnected()
+{
+  if (keyboard.isConnected())
+  {
+    printf("Bluetooth connected\n");
+  }
+  else
+  {
+    printf("Bluetooth NOT connected\n");
+  }
 }
 
 void loop()
 {
+  long elapseTime = millis() - timestampOrigin;
+
+  if (5000 < elapseTime)
+  {
+    checkBluetoothIsConnected();
+    timestampOrigin = millis();
+  }
+
   checkMainBouton();
 
   manivelle();

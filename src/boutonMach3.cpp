@@ -5,8 +5,8 @@
 #include "screen.h"
 #include "boutonMach3.h"
 
-// BleKeyboard Keyboard("ESP32 Bluetooth clavier", "Espressif", 80);
-extern BleKeyboard Keyboard;
+// BleKeyboard keyboard("ESP32 Bluetooth clavier", "Espressif", 80);
+extern BleKeyboard keyboard;
 
 const unsigned antiRebond = 10;
 
@@ -83,27 +83,27 @@ void btMach3(int pinNb)
         case PIN_ARRET_BT:
           // printf("ARRET\n");
           screenSendMessage("  ARRET  ");
-          Keyboard.press(KEY_LEFT_ALT);
-          Keyboard.press(115); // touche LEFT_ALT + touche "s" en minuscule
+          keyboard.press(KEY_LEFT_ALT);
+          keyboard.press(115); // touche LEFT_ALT + touche "s" en minuscule
           delay(100);
-          Keyboard.releaseAll();
+          keyboard.releaseAll();
           refreshSleepOriginTimestamp();
           break;
         case PIN_PAUSE_BT:
           // printf("PAUSE\n");
           screenSendMessage("  PAUSE  ");
-          Keyboard.press(32); // touche BACKSPACE
+          keyboard.press(32); // touche BACKSPACE
           delay(100);
-          Keyboard.releaseAll();
+          keyboard.releaseAll();
           refreshSleepOriginTimestamp();
           break;
         case PIN_START_BT:
           // printf("START\n");
           screenSendMessage("  START  ");
-          Keyboard.press(KEY_LEFT_ALT);
-          Keyboard.press(114); // touche LEFT_ALT + touche "r" en minuscule
+          keyboard.press(KEY_LEFT_ALT);
+          keyboard.press(114); // touche LEFT_ALT + touche "r" en minuscule
           delay(100);
-          Keyboard.releaseAll();
+          keyboard.releaseAll();
           refreshSleepOriginTimestamp();
           break;
         } // fin du switch
