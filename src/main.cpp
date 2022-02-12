@@ -22,8 +22,8 @@
 #include "selector.h"
 #include "screen.h"
 #include "sleep.h"
+#include "setup_i2c.h"
 
-// BleKeyboard keyboard("ESP32 Bluetooth keyboard", "Espressif", 80);
 BleKeyboard keyboard("ESP32 Bluetooth", "Espressif", 80);
 
 long timestampOrigin;
@@ -34,12 +34,14 @@ void setup()
   while (!Serial)
   { /*wait*/
   }
-  // Serial.println("Starting Télécommande BLE mach3");
+  Serial.println("Starting Télécommande BLE mach3");
 
   keyboard.begin();
 
   initCommandClavier();
   initManivelle();
+  initI2C();
+
   initScreen();
 
   // Bouton de sécurité pour la manivelle et le clavier
@@ -54,10 +56,6 @@ void setup()
   pinMode(PIN_AXE_A, INPUT_PULLUP);
 
   initSleep();
-
-  printf("digitalRead(PIN_SECU_BT): %d\n", digitalRead(PIN_SECU_BT));
-  printf("LOW %d\n", LOW);
-  printf("HIGH %d\n", HIGH);
 
   screenSendMessage("TLC-M3 ON");
 

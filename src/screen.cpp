@@ -18,7 +18,6 @@
 
 // Externalised variable
 Adafruit_SSD1306 *display = NULL;
-TwoWire *wire = NULL;
 // <----- Externalised variable
 
 // *** Initialise the screen

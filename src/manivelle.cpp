@@ -81,8 +81,8 @@ void selectAxe()
     {
       selectedAxePositiveKey = KEY_4; // ACSII 4 : 52
       selectedAxeNegativeKey = KEY_6; // ACSII 6 : 54
-      Serial.print("currentAxe__X = ");
-      Serial.println(currentAxe);
+      // Serial.print("currentAxe__X = ");
+      // Serial.println(currentAxe);
       refreshSleepOriginTimestamp();
       break;
     }
@@ -90,8 +90,8 @@ void selectAxe()
     {
       selectedAxePositiveKey = KEY_8; // ACSII 8 : 56
       selectedAxeNegativeKey = KEY_2; // ACSII 2 : 50
-      Serial.print("currentAxe__Y = ");
-      Serial.println(currentAxe);
+      // Serial.print("currentAxe__Y = ");
+      // Serial.println(currentAxe);
       refreshSleepOriginTimestamp();
       break;
     }
@@ -99,8 +99,8 @@ void selectAxe()
     {
       selectedAxePositiveKey = KEY_PAGE_UP;
       selectedAxeNegativeKey = KEY_PAGE_DOWN;
-      Serial.print("currentAxe__Z = ");
-      Serial.println(currentAxe);
+      // Serial.print("currentAxe__Z = ");
+      // Serial.println(currentAxe);
       refreshSleepOriginTimestamp();
       break;
     }
@@ -108,8 +108,8 @@ void selectAxe()
     {
       selectedAxePositiveKey = KEY_HOME;
       selectedAxeNegativeKey = KEY_END;
-      Serial.print("currentAxe__A = ");
-      Serial.println(currentAxe);
+      // Serial.print("currentAxe__A = ");
+      // Serial.println(currentAxe);
       refreshSleepOriginTimestamp();
       break;
     }

@@ -7,8 +7,8 @@
 #ifndef _CMD_CLAVIER_H
 #define _CMD_CLAVIER_H
 
-const int PIN_SDA = (int)GPIO_NUM_22;
-const int PIN_SCL = (int)GPIO_NUM_23;
+// const int PIN_SDA = (int)GPIO_NUM_22;
+// const int PIN_SCL = (int)GPIO_NUM_23;
 
 void initCommandClavier();
 void runCommandClavier();
