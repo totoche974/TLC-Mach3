@@ -26,6 +26,10 @@
 
 BleKeyboard keyboard("ESP32 Bluetooth", "Espressif", 80);
 
+// Externalised variable
+Adafruit_SSD1306 *display = NULL;
+// <----- Externalised variable
+
 long timestampOrigin;
 
 void setup()
@@ -36,28 +40,28 @@ void setup()
   }
   Serial.println("Starting Télécommande BLE mach3");
 
-  keyboard.begin();
+  // keyboard.begin();
 
-  initCommandClavier();
-  initManivelle();
-  initI2C();
+  // initCommandClavier();
+  // initManivelle();
+  // initI2C();
 
   initScreen();
 
-  // Bouton de sécurité pour la manivelle et le clavier
-  pinMode(PIN_SECU_BT, INPUT_PULLUP);
-  pinMode(PIN_START_BT, INPUT_PULLUP);
-  pinMode(PIN_PAUSE_BT, INPUT_PULLUP);
-  pinMode(PIN_ARRET_BT, INPUT_PULLUP);
+  // // Bouton de sécurité pour la manivelle et le clavier
+  // pinMode(PIN_SECU_BT, INPUT_PULLUP);
+  // pinMode(PIN_START_BT, INPUT_PULLUP);
+  // pinMode(PIN_PAUSE_BT, INPUT_PULLUP);
+  // pinMode(PIN_ARRET_BT, INPUT_PULLUP);
 
-  pinMode(PIN_AXE_X, INPUT_PULLUP);
-  pinMode(PIN_AXE_Y, INPUT_PULLUP);
-  pinMode(PIN_AXE_Z, INPUT_PULLUP);
-  pinMode(PIN_AXE_A, INPUT_PULLUP);
+  // pinMode(PIN_AXE_X, INPUT_PULLUP);
+  // pinMode(PIN_AXE_Y, INPUT_PULLUP);
+  // pinMode(PIN_AXE_Z, INPUT_PULLUP);
+  // pinMode(PIN_AXE_A, INPUT_PULLUP);
 
-  initSleep();
+  // initSleep();
 
-  screenSendMessage("TLC-M3 ON");
+  // screenSendMessage("TLC-M3 ON");
 
   timestampOrigin = millis();
 }
@@ -74,23 +78,73 @@ void checkBluetoothIsConnected()
   }
 }
 
+void showRectangle()
+{
+  display->clearDisplay();
+  for (int x = 0; x < 128; ++x)
+  {
+    for (int y = 0; y < 32; ++y)
+    {
+      display->drawPixel(x, y, SSD1306_WHITE);
+    }
+  }
+  display->display();
+}
+
+const int analogInPin = A13;
+int dummy_int = 0;
+bool paintScreen = true;
+
 void loop()
 {
+  // long elapseTime = millis() - timestampOrigin;
+
+  // if (5000 < elapseTime)
+  // {
+  //   checkBluetoothIsConnected();
+  //   timestampOrigin = millis();
+  // }
+
+  // checkMainBouton();
+
+  // manivelle();
+
+  // runCommandClavier();
+
+  // showRectangle();
+
+  // shouldSleep();
+
+  int sensorValue = analogRead(analogInPin);
+
+  dummy_int += 1;
+
+  // sensorValue : 2427
+  // tension mesuré au multimètre : 4.2 V
+
   long elapseTime = millis() - timestampOrigin;
 
-  if (5000 < elapseTime)
+  if (1000 < elapseTime)
   {
-    checkBluetoothIsConnected();
+    printf("sensorValue %d\n", sensorValue);
+
+    if (paintScreen)
+    {
+      showRectangle();
+    }
+    else
+    {
+      display->clearDisplay();
+      display->display();
+    }
+
+    paintScreen = !paintScreen;
     timestampOrigin = millis();
   }
+}
 
-  checkMainBouton();
-
-  manivelle();
-
-  runCommandClavier();
-
-  loopScreen();
-
-  shouldSleep();
-} // end loop
+// http://www.pinon-hebert.fr/Knowledge/index.php/ESP32#Lecture_de_la_charge_batterie
+// int RATIO = 2;
+// float vbat = RATIO * sensorValue / (4096.0 / 3.29);
+// float vbat = RATIO * sensorValue / (4096.0 / 3.5);
+// printf("vbat %f\n", vbat);
