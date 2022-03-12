@@ -6,4 +6,11 @@ void initScreen();
 void clearDisplay();
 void loopScreen();
 
-void screenSendMessage(String message);
+enum TypeMessage
+{
+  Small,
+  Big
+};
+
+void screenSendMessage(String message, TypeMessage type = TypeMessage::Big);
+// void screenSendMessage(String message, TypeMessage type);

@@ -10,6 +10,7 @@
 #include "boutonMach3.h"
 #include "sleep.h"
 #include "axe.h"
+#include "battery.h"
 
 extern BleKeyboard keyboard;
 
@@ -184,9 +185,16 @@ void Command_D(char key)
 
 void Command_E(char key)
 {
-  Serial.print("key = ");
-  Serial.println(key);
-  screenSendMessage("E: Not used");
+  // Serial.print("key = ");
+  // Serial.println(key);
+  char toPrint[50];
+  const float tension = getTension();
+  const int loadBattery = getLoadBattery();
+
+  printf("tension: %.2f Volt ; load battery %d %%\n", tension, loadBattery);
+
+  sprintf(toPrint, "%.2fV %d%%", tension, loadBattery);
+  screenSendMessage(toPrint, TypeMessage::Small);
 }
 
 void Command_F(char key)
@@ -278,7 +286,9 @@ shortPressedResult isShortPressed()
   return res;
 }
 
-//
+// Manage different behavior of the '0' key of the keyboard.
+// If the press on the '0' key is short => RaZ XY = 0
+// Else => RaZ the current selected axe
 void managePressBoutonShortLong()
 {
   // Sanity check
@@ -302,6 +312,7 @@ void managePressBoutonShortLong()
     {
     case '0':
       Command_0(key);
+      refreshSleepOriginTimestamp();
       break; // Remise à zéro des axes XYZ
 
     } // Fin du swich
@@ -350,9 +361,8 @@ void managePressBoutonShortLong()
     }
     }
     screenSendMessage(toPrint);
+    refreshSleepOriginTimestamp();
   } // fin du else
-
-  // else if ((key == 'au choix')) { }
 
 } // Fin de la fonction
 
@@ -361,6 +371,12 @@ void runCommandClavier()
   char key = keypad.getKey();
 
   managePressBoutonShortLong();
+
+  if (key == 'E')
+  {
+    Command_E(key);
+    refreshSleepOriginTimestamp();
+  }
 
   if ((digitalRead(PIN_SECU_BT) == LOW))
   {
@@ -423,10 +439,10 @@ void runCommandClavier()
       Command_D(key);
       refreshSleepOriginTimestamp();
       break;
-    case 'E':
-      Command_E(key);
-      refreshSleepOriginTimestamp();
-      break;
+    // case 'E':
+    //   Command_E(key);
+    //   refreshSleepOriginTimestamp();
+    //   break;
     case 'F':
       Command_F(key);
       refreshSleepOriginTimestamp();

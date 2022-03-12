@@ -53,29 +53,56 @@ long startMessage;
 String messageToPrint;
 String messageToPrintLigne1;
 String messageToPrintLigne2;
+TypeMessage typeMessage;
 
-void screenSendMessage(String message)
+// void screenSendMessage(String message, TypeMessage type = TypeMessage::Big)
+void screenSendMessage(String message, TypeMessage type)
 {
   startMessage = millis();
   messageToPrint = message;
+  typeMessage = type;
 }
+
+bool isDisplaying = false;
 
 void loopScreen()
 {
   if (!messageToPrint.isEmpty())
   {
-    display->clearDisplay();
+    if (!isDisplaying)
+    {
+      display->clearDisplay();
 
-    display->setTextSize(2); // Draw 2X-scale text
-    display->setTextColor(SSD1306_WHITE);
-    display->setCursor(0, 16);
-    display->println(F(messageToPrint.c_str()));
-    display->display(); // Show initial text
+      switch (typeMessage)
+      {
+      case TypeMessage::Small:
+      {
+        display->setTextSize(2); // Draw 1X-scale text
+        display->startscrollleft(0x00, 0x0F);
+        display->setCursor(0, 16);
+        break;
+      }
+      case TypeMessage::Big:
+      {
+        display->setTextSize(2); // Draw 2X-scale text
+        display->stopscroll();
+        display->setCursor(0, 16);
+        break;
+      }
+      }
+
+      display->setTextColor(SSD1306_WHITE);
+      display->println(F(messageToPrint.c_str()));
+      display->display(); // Show initial text
+      isDisplaying = true;
+    }
   }
+
   else
   {
     display->clearDisplay();
     display->display();
+    isDisplaying = false;
   }
 
   long elapseTime = millis() - startMessage;
