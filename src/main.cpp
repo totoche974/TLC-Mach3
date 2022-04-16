@@ -24,11 +24,22 @@
 #include "sleep.h"
 #include "setup_i2c.h"
 
+/**
+ * @brief Bluetooth keyboard variable
+ *
+ */
 BleKeyboard keyboard("ESP32 Bluetooth", "Espressif", 80);
 
-// Externalised variable
+/**
+ * @brief Screen variable
+ *
+ */
 Adafruit_SSD1306 *display = NULL;
-// <----- Externalised variable
+
+/**
+ * Time to handle sleep mode
+ *
+ */
 
 long timestampOrigin;
 
@@ -97,24 +108,4 @@ void loop()
   shouldSleep();
 
   loopScreen();
-
-  // long elapseTime = millis() - timestampOrigin;
-
-  // if (1000 < elapseTime)
-  // {
-  //   printf("tension: %.2f V ; load battery %d %%\n", getTension(), getLoadBattery());
-
-  //   if (paintScreen)
-  //   {
-  //     showRectangle();
-  //   }
-  //   else
-  //   {
-  //     display->clearDisplay();
-  //     display->display();
-  //   }
-
-  //   paintScreen = !paintScreen;
-  //   timestampOrigin = millis();
-  // }
 }
