@@ -1,0 +1,73 @@
+/* Blink without Delay
+
+Fait clignoter une LED connectée à une broche numérique en sortie
+sans utiliser la fonction delay(). Ainsi, un autre code peut être exécuté,
+sans être bloqué par le code de gestion de la LED.
+
+La LED est connectée à la broche 13.
+
+ créé en 2005
+ par David A. Mellis
+ modifié 8 Feb 2010
+ par Paul Stoffregen
+
+ Cet exemple est dans le domaine public.
+Traduction française par X. HINAULT - www.mon-club-elec.fr
+
+ http://www.arduino.cc/en/Tutorial/BlinkWithoutDelay
+ */
+
+/////////////////////// 1. Entête déclarative ///////////////////////////
+
+// Les constantes ne changent pas durant le programme.
+// Utilisée ici pour définir la numéro de la broche :
+
+const int ledPin =  13;      // crée un identifiant pour la broche utilisée avec la LED
+
+// Les variables sont modifiées au cours du programme
+int ledState = LOW;             // ledState est utilisée pour fixer l'état de la LED (HIGH/LOW)
+
+// les variables suivantes sont de type long car le temps, mesuré en millisecondes
+// devient rapidement un nombre qui ne peut pas être stocké dans un type int.
+
+long previousMillis = 0;        // variable pour mémoriser le temps écoulé depuis le dernier changement de la LED
+long interval = 1000;           //intervalle de clignotement de la LED (en millisecondes)
+
+///////////////////// 2. Fonction d'initialisation Setup ///////////////////////
+
+void setup() {
+
+  // configure la broche numérique en SORTIE
+  pinMode(ledPin, OUTPUT);      
+
+}
+
+////////////////// 3. Fonction principale Loop /////////////////////////////
+
+void loop()
+{
+  // Ici, mettre le code que vous voulez exécuter tant que la LED clignote
+
+  // Vérifie si le délai est écoulé depuis le dernier changement d'état de la LED
+  // C'est le cas si la différence entre la valeur courante renvoyée par millis()
+  // et la valeur de la variable du temps du dernier changement d'état de la LED
+  // est supérieure à la valeur de l'intervalle de clignotement.
+
+  unsigned long currentMillis = millis(); // stocke la valeur courante de la fonction millis()
+
+  if(currentMillis - previousMillis > interval) {
+
+    // mémorise la valeur de la fonction millis()
+    previousMillis = currentMillis;  
+
+    // inverse la variable d''état de la LED
+    if (ledState == LOW)
+      ledState = HIGH;
+    else
+      ledState = LOW;
+
+    // modifie l'état de la LED
+    digitalWrite(ledPin, ledState);
+  }
+}
+ 
