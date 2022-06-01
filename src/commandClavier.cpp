@@ -183,9 +183,9 @@ void Command_D(char key)
   screenSendMessage("D: Not used");
 }
 
-#include <MAX1704X.h>
+// #include <MAX1704X.h>
 
-extern MAX1704X _fuelGauge;
+// extern MAX1704X _fuelGauge;
 
 void Command_E(char key)
 {
@@ -197,12 +197,12 @@ void Command_E(char key)
 
   // printf("tension: %.2f Volt ; load battery %d %%\n", tension, loadBattery);
 
-  printf("tension: %.2f Volt ; load battery %.1f %%\n", _fuelGauge.voltage(), _fuelGauge.percent(true));
+  // printf("tension: %.2f Volt ; load battery %.1f %%\n", _fuelGauge.voltage(), _fuelGauge.percent(true));
 
-  // sprintf(toPrint, "%.2fV %d%%", tension, loadBattery);
-  // sprintf(toPrint, "%.2fV %.1f%%", _fuelGauge.voltage() / 1000.0, _fuelGauge.percent(true));
-  sprintf(toPrint, "%.2fV", _fuelGauge.voltage());
-  screenSendMessage(toPrint, TypeMessage::Small);
+  // // sprintf(toPrint, "%.2fV %d%%", tension, loadBattery);
+  // // sprintf(toPrint, "%.2fV %.1f%%", _fuelGauge.voltage() / 1000.0, _fuelGauge.percent(true));
+  // sprintf(toPrint, "%.2fV", _fuelGauge.voltage());
+  // screenSendMessage(toPrint, TypeMessage::Small);
 }
 
 void Command_F(char key)
@@ -210,9 +210,9 @@ void Command_F(char key)
   // Serial.print("key = ");
   // Serial.println(key);
   // screenSendMessage("F: Not used");
-  char toPrint[50];
-  sprintf(toPrint, "%.2f%%", _fuelGauge.percent(true));
-  screenSendMessage(toPrint, TypeMessage::Small);
+  // char toPrint[50];
+  // sprintf(toPrint, "%.2f%%", _fuelGauge.percent(true));
+  // screenSendMessage(toPrint, TypeMessage::Small);
 }
 
 /**

@@ -15,7 +15,7 @@
 #include <AiEsp32RotaryEncoder.h>
 #include <Wire.h>
 #include <Keypad_I2C.h>
-#include <MAX1704X.h>
+// #include <MAX1704X.h>
 
 #include "commandClavier.h"
 #include "boutonMach3.h"
@@ -40,7 +40,7 @@
 // for the MAX17044.
 //
 // MAX1704X _fuelGauge = MAX1704X(MAX17043_mV);
-MAX1704X _fuelGauge = MAX1704X(5.0 / (4096.0 * 2));
+// MAX1704X _fuelGauge = MAX1704X(5.0 / (4096.0 * 2));
 
 /**
  * @brief Bluetooth keyboard variable
@@ -96,31 +96,31 @@ void setup()
   // Initialize the fuel gauge.
   //
   // if (_fuelGauge.begin(true, static_cast<uint8_t>(0x32)))
-  if (_fuelGauge.begin(&Wire, static_cast<uint8_t>(0x32)))
-  {
-    Serial.println("The MAX1704X device was found.\n");
+  // if (_fuelGauge.begin(&Wire, static_cast<uint8_t>(0x32)))
+  // {
+  //   Serial.println("The MAX1704X device was found.\n");
 
-    //
-    // Reset the device.
-    //
-    Serial.println("Resetting device...");
-    _fuelGauge.reset();
-    delay(250);
+  //   //
+  //   // Reset the device.
+  //   //
+  //   Serial.println("Resetting device...");
+  //   _fuelGauge.reset();
+  //   delay(250);
 
-    //
-    // Issue a quickstart command and wait
-    // for the device to be ready.
-    //
-    Serial.println("Initiating quickstart mode...");
-    _fuelGauge.quickstart();
-    delay(125);
-  }
-  else
-  {
-    Serial.println("The MAX1704X device was NOT found.\n");
-    while (true)
-      ;
-  }
+  //   //
+  //   // Issue a quickstart command and wait
+  //   // for the device to be ready.
+  //   //
+  //   Serial.println("Initiating quickstart mode...");
+  //   _fuelGauge.quickstart();
+  //   delay(125);
+  // }
+  // else
+  // {
+  //   Serial.println("The MAX1704X device was NOT found.\n");
+  //   while (true)
+  //     ;
+  // }
 
   timestampOrigin = millis();
 }
@@ -143,10 +143,10 @@ void loop()
 
   if (1000 < elapseTime)
   {
-    Serial.print("Battery Percent is ");
-    Serial.print(_fuelGauge.percent(true));
-    Serial.println("%");
-    printf("_fuelGauge.percent(true) %f \n", _fuelGauge.percent(true));
+    // Serial.print("Battery Percent is ");
+    // Serial.print(_fuelGauge.percent(true));
+    // Serial.println("%");
+    // printf("_fuelGauge.percent(true) %f \n", _fuelGauge.percent(true));
     checkBluetoothIsConnected();
     timestampOrigin = millis();
   }
