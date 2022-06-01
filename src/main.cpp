@@ -39,7 +39,8 @@
 // Define the MAX17403 fuel gauge. Use MAX17044_mV
 // for the MAX17044.
 //
-MAX1704X _fuelGauge = MAX1704X(MAX17043_mV);
+// MAX1704X _fuelGauge = MAX1704X(MAX17043_mV);
+MAX1704X _fuelGauge = MAX1704X(5.0 / (4096.0 * 2));
 
 /**
  * @brief Bluetooth keyboard variable
@@ -94,7 +95,8 @@ void setup()
   //
   // Initialize the fuel gauge.
   //
-  if (_fuelGauge.begin(true, static_cast<uint8_t>(0x32)))
+  // if (_fuelGauge.begin(true, static_cast<uint8_t>(0x32)))
+  if (_fuelGauge.begin(&Wire, static_cast<uint8_t>(0x32)))
   {
     Serial.println("The MAX1704X device was found.\n");
 
@@ -144,6 +146,7 @@ void loop()
     Serial.print("Battery Percent is ");
     Serial.print(_fuelGauge.percent(true));
     Serial.println("%");
+    printf("_fuelGauge.percent(true) %f \n", _fuelGauge.percent(true));
     checkBluetoothIsConnected();
     timestampOrigin = millis();
   }
