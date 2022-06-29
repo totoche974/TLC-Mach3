@@ -4,8 +4,8 @@
 #include "screen.h"
 #include "sleep.h"
 
-int sleepThreshold = 5 * 60 * 1000; // 5 minutes
-// int sleepThreshold = 3000; // test 3 secondes
+const int SLEEP_THRESHOLD = 5 * 60 * 1000; // 5 minutes
+// int SLEEP_THRESHOLD = 3000; // test 3 secondes
 
 ulong lastActivityTimestamp = 0;
 
@@ -58,7 +58,7 @@ void shouldSleep()
   ulong currentTimestamp = millis();
   ulong elapseTime = currentTimestamp - lastActivityTimestamp;
 
-  if (sleepThreshold < elapseTime)
+  if (SLEEP_THRESHOLD < elapseTime)
   {
     clearScreen();
 
