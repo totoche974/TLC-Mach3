@@ -10,7 +10,7 @@
 #include "boutonMach3.h"
 #include "sleep.h"
 #include "axe.h"
-#include "battery.h"
+#include "lipo.h"
 
 extern BleKeyboard keyboard;
 
@@ -183,36 +183,22 @@ void Command_D(char key)
   screenSendMessage("D: Not used");
 }
 
-// #include <MAX1704X.h>
-
-// extern MAX1704X _fuelGauge;
+extern SFE_MAX1704X lipo;
 
 void Command_E(char key)
 {
-  // Serial.print("key = ");
-  // Serial.println(key);
   char toPrint[50];
-  // const float tension = getTension();
-  // const int loadBattery = getLoadBattery();
 
-  // printf("tension: %.2f Volt ; load battery %d %%\n", tension, loadBattery);
-
-  // printf("tension: %.2f Volt ; load battery %.1f %%\n", _fuelGauge.voltage(), _fuelGauge.percent(true));
-
-  // // sprintf(toPrint, "%.2fV %d%%", tension, loadBattery);
-  // // sprintf(toPrint, "%.2fV %.1f%%", _fuelGauge.voltage() / 1000.0, _fuelGauge.percent(true));
-  // sprintf(toPrint, "%.2fV", _fuelGauge.voltage());
-  // screenSendMessage(toPrint, TypeMessage::Small);
+  sprintf(toPrint, "  %.2fV", lipo.getVoltage());
+  screenSendMessage(toPrint, TypeMessage::Small);
 }
 
 void Command_F(char key)
 {
-  // Serial.print("key = ");
-  // Serial.println(key);
-  // screenSendMessage("F: Not used");
-  // char toPrint[50];
-  // sprintf(toPrint, "%.2f%%", _fuelGauge.percent(true));
-  // screenSendMessage(toPrint, TypeMessage::Small);
+  char toPrint[50];
+
+  sprintf(toPrint, "  %.2f %%", lipo.getSOC());
+  screenSendMessage(toPrint, TypeMessage::Small);
 }
 
 /**
@@ -389,6 +375,12 @@ void runCommandClavier()
     refreshSleepOriginTimestamp();
   }
 
+  if (key == 'F')
+  {
+    Command_F(key);
+    refreshSleepOriginTimestamp();
+  }
+
   if ((digitalRead(PIN_SECU_BT) == LOW))
   {
     if (key)
@@ -450,14 +442,14 @@ void runCommandClavier()
       Command_D(key);
       refreshSleepOriginTimestamp();
       break;
-    // case 'E':
-    //   Command_E(key);
-    //   refreshSleepOriginTimestamp();
-    //   break;
-    case 'F':
-      Command_F(key);
-      refreshSleepOriginTimestamp();
-      break;
+      // case 'E':
+      //   Command_E(key);
+      //   refreshSleepOriginTimestamp();
+      //   break;
+      // case 'F':
+      //   Command_F(key);
+      //   refreshSleepOriginTimestamp();
+      //   break;
       // default:
       //   Serial.print("DEFAULT key = ");
       //   Serial.println(key);
