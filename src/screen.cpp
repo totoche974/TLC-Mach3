@@ -21,7 +21,6 @@ extern Adafruit_SSD1306 *display;
 // *** Initialise the screen
 void initScreen()
 {
-  // display = new Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
   display = new Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
   if (!display->begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS))
@@ -36,11 +35,11 @@ void initScreen()
   display->display();
   delay(2000); // Pause de 2 seconds
 
-  clearDisplay();
+  clearScreen();
 }
 
 // *** Clear the screen
-void clearDisplay()
+void clearScreen()
 {
   // Clear the buffer
   display->clearDisplay();
@@ -55,60 +54,72 @@ String messageToPrintLigne1;
 String messageToPrintLigne2;
 TypeMessage typeMessage;
 
-// void screenSendMessage(String message, TypeMessage type = TypeMessage::Big)
+bool isDisplaying = false;
+bool hasUpdate = false;
+
 void screenSendMessage(String message, TypeMessage type)
 {
   startMessage = millis();
   messageToPrint = message;
   typeMessage = type;
+  hasUpdate = true;
 }
 
-bool isDisplaying = false;
+const int DISPLAY_DURATION = 5000;
+
+void displayMessage(TypeMessage typeMessage)
+{
+  display->clearDisplay();
+
+  switch (typeMessage)
+  {
+  case TypeMessage::Small:
+  {
+    display->setTextSize(2); // Draw 1X-scale text
+    display->startscrollleft(0x00, 0x0F);
+    display->setCursor(0, 16);
+    break;
+  }
+  case TypeMessage::Big:
+  {
+    display->setTextSize(2); // Draw 2X-scale text
+    display->stopscroll();
+    display->setCursor(0, 16);
+    break;
+  }
+  }
+
+  display->setTextColor(SSD1306_WHITE);
+  display->println(F(messageToPrint.c_str()));
+  display->display(); // Show initial text
+  isDisplaying = true;
+  hasUpdate = false;
+}
 
 void loopScreen()
 {
-  if (!messageToPrint.isEmpty())
+  long elapseTime = millis() - startMessage;
+
+  if (DISPLAY_DURATION < elapseTime)
   {
-    if (!isDisplaying)
-    {
-      display->clearDisplay();
+    messageToPrint = "";
 
-      switch (typeMessage)
-      {
-      case TypeMessage::Small:
-      {
-        display->setTextSize(2); // Draw 1X-scale text
-        display->startscrollleft(0x00, 0x0F);
-        display->setCursor(0, 16);
-        break;
-      }
-      case TypeMessage::Big:
-      {
-        display->setTextSize(2); // Draw 2X-scale text
-        display->stopscroll();
-        display->setCursor(0, 16);
-        break;
-      }
-      }
-
-      display->setTextColor(SSD1306_WHITE);
-      display->println(F(messageToPrint.c_str()));
-      display->display(); // Show initial text
-      isDisplaying = true;
-    }
-  }
-
-  else
-  {
     display->clearDisplay();
     display->display();
     isDisplaying = false;
   }
-
-  long elapseTime = millis() - startMessage;
-
-  if (5000 < elapseTime)
+  else if (!messageToPrint.isEmpty())
   {
-    messageToPrint = "";
-  } // Délai d'affichage du message limité à 5 secondes
+    if (!isDisplaying)
+    {
+      displayMessage(typeMessage);
+    }
+    else
+    {
+      if (hasUpdate)
+      {
+        displayMessage(typeMessage);
+      }
+    }
+  }
 }

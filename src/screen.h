@@ -3,7 +3,7 @@
 #include <Adafruit_SSD1306.h>
 
 void initScreen();
-void clearDisplay();
+void clearScreen();
 void loopScreen();
 
 enum TypeMessage
