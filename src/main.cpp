@@ -75,6 +75,10 @@ void setup()
   pinMode(PIN_AXE_Z, INPUT_PULLUP);
   pinMode(PIN_AXE_A, INPUT_PULLUP);
 
+  pinMode(PIN_LED_LIPO_ALERT, OUTPUT);
+
+  digitalWrite(PIN_LED_LIPO_ALERT, HIGH);
+
   initSleep();
 
   screenSendMessage("TLC-M3 ON");
@@ -111,6 +115,7 @@ void loop()
   runCommandClavier();
 
   shouldSleep();
+  ledAlertShouldBlink();
 
   loopScreen();
 }
