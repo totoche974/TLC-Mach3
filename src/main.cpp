@@ -25,6 +25,7 @@
 #include "sleep.h"
 #include "setup_i2c.h"
 #include "lipo.h"
+#include "WiFi.h"
 
 // SFE_MAX1704X lipo(MAX1704X_MAX17043);
 
@@ -76,8 +77,9 @@ void setup()
   pinMode(PIN_AXE_A, INPUT_PULLUP);
 
   pinMode(PIN_LED_LIPO_ALERT, OUTPUT);
+  digitalWrite(PIN_LED_LIPO_ALERT, LOW);
 
-  digitalWrite(PIN_LED_LIPO_ALERT, HIGH);
+  pinMode(PIN_BT_VISU_CHARGE_LIPO, INPUT_PULLUP);
 
   initSleep();
 
@@ -96,6 +98,12 @@ void checkBluetoothIsConnected()
   {
     printf("Bluetooth NOT connected\n");
   }
+}
+
+void DisableWifi()
+{
+  WiFi.disconnect(true);  // Disconnect from the network
+  WiFi.mode(WIFI_OFF);    // Switch WiFi off
 }
 
 void loop()

@@ -2,7 +2,7 @@
 #include <Keypad.h>
 #include <BleKeyboard.h>
 #include <Keypad_I2C.h>
-#include "WiFi.h"
+//#include "WiFi.h"
 
 #include "commandClavier.h"
 
@@ -183,22 +183,26 @@ void Command_D(char key)
   screenSendMessage("D: Not used");
 }
 
-extern SFE_MAX1704X lipo;
+//extern SFE_MAX1704X lipo;
 
 void Command_E(char key)
 {
-  char toPrint[50];
-
-  sprintf(toPrint, "  %.2fV", lipo.getVoltage());
-  screenSendMessage(toPrint, TypeMessage::Small);
+  // char toPrint[50];
+  // sprintf(toPrint, "  %.2fV", lipo.getVoltage());
+  // screenSendMessage(toPrint, TypeMessage::Small);
+  Serial.print("key = ");
+  Serial.println(key);
+  screenSendMessage("E: Not used");
 }
 
 void Command_F(char key)
 {
-  char toPrint[50];
-
-  sprintf(toPrint, "  %.2f %%", lipo.getSOC());
-  screenSendMessage(toPrint, TypeMessage::Small);
+  // char toPrint[50];
+  // sprintf(toPrint, "  %.2f %%", lipo.getSOC());
+  // screenSendMessage(toPrint, TypeMessage::Small);
+  Serial.print("key = ");
+  Serial.println(key);
+  screenSendMessage("F: Not used");
 }
 
 /**
