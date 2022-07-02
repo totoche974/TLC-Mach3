@@ -2,7 +2,7 @@
 #include "screen.h"
 
 SFE_MAX1704X lipo(MAX1704X_MAX17043);
-extern SFE_MAX1704X lipo;
+//extern SFE_MAX1704X lipo; //TODO vérifier si utile............
 
 long timestampOriginLipo;
 
@@ -75,18 +75,19 @@ void doBlink()
 }
 
 // Etat du bouton poussoir
-int boutonState = 0;       //état actuel du bouton poussoir
-int boutonPushCounter = 0; // nombre d'appuis sur le bouton poussoir
-int lastBoutonState = 0;   // Variable pour le précédent état du bouton poussoir
+uint8_t boutonState = 0;       //état actuel du bouton poussoir
+uint8_t boutonPushCounter = 0; // nombre d'appuis sur le bouton poussoir
+uint8_t lastBoutonState = 0;   // Variable pour le précédent état du bouton poussoir
 
-void boutonVisuChargeLipo()
-{
   /**
-   * @brief appui court sur bt poussoir affiche le voltage
-   *        appui long sur bt poussoir affiche le % restant
+   * @brief appui 1x sur bt poussoir affiche le voltage
+   *        appui 2x sur bt poussoir affiche le % restant
    *
    */
-  // lit l'état actuel du bouton poussoir
+ 
+void boutonVisuChargeLipo()
+{
+ // lit l'état actuel du bouton poussoir
   boutonState = digitalRead(PIN_BT_VISU_CHARGE_LIPO);
 
   if (boutonState != lastBoutonState)
@@ -96,11 +97,16 @@ void boutonVisuChargeLipo()
     {
       // si l'état actuel du bouton est HAUT
       boutonPushCounter++;
+    Serial.print("Appuyé :  ");
+    Serial.println(boutonPushCounter, DEC);   
+    }
+    else {
+      Serial.println("PAS D'APPUI");
     }
     // mémorise l'état courant du bouton poussoir
     lastBoutonState = boutonState;
   }
-  // affiche voltage et % batterie
+  // affiche voltage de la batterie
   if (boutonPushCounter % 2 == 0)
   { // affiche le voltage
     char toPrint[50];
@@ -108,9 +114,10 @@ void boutonVisuChargeLipo()
     screenSendMessage(toPrint, TypeMessage::Small);
   }
   else
-  { // affiche le %
+  { // affiche le % voltage de la batterie
     char toPrint[50];
     sprintf(toPrint, "  %.2f %%", lipo.getSOC());
     screenSendMessage(toPrint, TypeMessage::Small);
   }
+  
 }

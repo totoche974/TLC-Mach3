@@ -1,6 +1,6 @@
 /**
  * @file main.cpp
- * @author
+ * @author Gaston, Frozar, Gilles
  * @brief Télécommande bluetooth pour mach3
  * @version 0.1
  * @date 2020-12-10
@@ -80,6 +80,7 @@ void setup()
   digitalWrite(PIN_LED_LIPO_ALERT, LOW);
 
   pinMode(PIN_BT_VISU_CHARGE_LIPO, INPUT_PULLUP);
+  //digitalWrite(PIN_BT_VISU_CHARGE_LIPO, HIGH);
 
   initSleep();
 
@@ -102,8 +103,8 @@ void checkBluetoothIsConnected()
 
 void DisableWifi()
 {
-  WiFi.disconnect(true);  // Disconnect from the network
-  WiFi.mode(WIFI_OFF);    // Switch WiFi off
+  WiFi.disconnect(true); // Disconnect from the network
+  WiFi.mode(WIFI_OFF);   // Switch WiFi off
 }
 
 void loop()
@@ -115,6 +116,8 @@ void loop()
     checkBluetoothIsConnected();
     timestampOrigin = millis();
   }
+
+  boutonVisuChargeLipo();
 
   checkMainBouton();
 
