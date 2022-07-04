@@ -2,7 +2,7 @@
 #include "screen.h"
 
 SFE_MAX1704X lipo(MAX1704X_MAX17043);
-//extern SFE_MAX1704X lipo; //TODO vérifier si utile............
+// extern SFE_MAX1704X lipo; //TODO vérifier si utile............
 
 long timestampOriginLipo;
 
@@ -79,45 +79,47 @@ uint8_t boutonState = 0;       //état actuel du bouton poussoir
 uint8_t boutonPushCounter = 0; // nombre d'appuis sur le bouton poussoir
 uint8_t lastBoutonState = 0;   // Variable pour le précédent état du bouton poussoir
 
-  /**
-   * @brief appui 1x sur bt poussoir affiche le voltage
-   *        appui 2x sur bt poussoir affiche le % restant
-   *
-   */
- 
+/**
+ * @brief appui 1x sur bt poussoir affiche le voltage
+ *        appui 2x sur bt poussoir affiche le % restant
+ *
+ */
+
 void boutonVisuChargeLipo()
 {
- // lit l'état actuel du bouton poussoir
+  // lit l'état actuel du bouton poussoir
   boutonState = digitalRead(PIN_BT_VISU_CHARGE_LIPO);
 
   if (boutonState != lastBoutonState)
   {
     // si état du bouton poussoir change vers le HAUT, on incrémente la variable de comptage
-    if (boutonState == HIGH)
+    if (boutonState == LOW)
     {
       // si l'état actuel du bouton est HAUT
       boutonPushCounter++;
-    Serial.print("Appuyé :  ");
-    Serial.println(boutonPushCounter, DEC);   
-    }
-    else {
-      Serial.println("PAS D'APPUI");
+      Serial.print("Appuyé :  ");
+      Serial.println(boutonPushCounter, DEC);
     }
     // mémorise l'état courant du bouton poussoir
     lastBoutonState = boutonState;
   }
   // affiche voltage de la batterie
-  if (boutonPushCounter % 2 == 0)
+  if (boutonPushCounter == 1)
   { // affiche le voltage
     char toPrint[50];
     sprintf(toPrint, "  %.2fV", lipo.getVoltage());
     screenSendMessage(toPrint, TypeMessage::Small);
   }
-  else
+  if (boutonPushCounter == 2)
   { // affiche le % voltage de la batterie
     char toPrint[50];
     sprintf(toPrint, "  %.2f %%", lipo.getSOC());
     screenSendMessage(toPrint, TypeMessage::Small);
   }
-  
+
+  if (boutonPushCounter == 3)
+  {
+    boutonPushCounter = 0;
+    clearScreen();
+  }
 }
