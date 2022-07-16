@@ -3,9 +3,14 @@
 #include "boutonMach3.h"
 #include "screen.h"
 #include "sleep.h"
+#include "lipo.h"
 
+/**
+ * @brief Durée avant mise en veille.
+ *
+ */
 const int SLEEP_THRESHOLD = 5 * 60 * 1000; // 5 minutes
-// int SLEEP_THRESHOLD = 3000; // test 3 secondes
+// const int SLEEP_THRESHOLD = 10000; // test 3 secondes
 
 ulong lastActivityTimestamp = 0;
 
@@ -43,6 +48,7 @@ void initSleep()
   setupWakeupBouton(PIN_START_BT);
   setupWakeupBouton(PIN_PAUSE_BT);
   setupWakeupBouton(PIN_ARRET_BT);
+  setupWakeupBouton(PIN_BT_VISU_CHARGE_LIPO);
 
   lastActivityTimestamp = millis();
 }

@@ -6,11 +6,6 @@ void initScreen();
 void clearScreen();
 void loopScreen();
 
-enum TypeMessage
-{
-  Small,
-  Big
-};
+void screenSendMessage(String message);
 
-void screenSendMessage(String message, TypeMessage type = TypeMessage::Big);
-// void screenSendMessage(String message, TypeMessage type);
+const int DISPLAY_DURATION = 5000;

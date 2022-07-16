@@ -1,8 +1,8 @@
 #include "lipo.h"
 #include "screen.h"
+#include "sleep.h"
 
 SFE_MAX1704X lipo(MAX1704X_MAX17043);
-// extern SFE_MAX1704X lipo; //TODO vérifier si utile............
 
 long timestampOriginLipo;
 
@@ -79,12 +79,14 @@ uint8_t boutonState = 0;       //état actuel du bouton poussoir
 uint8_t boutonPushCounter = 0; // nombre d'appuis sur le bouton poussoir
 uint8_t lastBoutonState = 0;   // Variable pour le précédent état du bouton poussoir
 
+bool hasIncremented = false;
+long lastChange = millis();
+
 /**
  * @brief appui 1x sur bt poussoir affiche le voltage
- *        appui 2x sur bt poussoir affiche le % restant
- *
+ *        appui 2x sur bt poussoir affiche le % de charge
+ *        appui 3x sur bt poussoir eteint l'afficheur
  */
-
 void boutonVisuChargeLipo()
 {
   // lit l'état actuel du bouton poussoir
@@ -95,31 +97,50 @@ void boutonVisuChargeLipo()
     // si état du bouton poussoir change vers le HAUT, on incrémente la variable de comptage
     if (boutonState == LOW)
     {
-      // si l'état actuel du bouton est HAUT
       boutonPushCounter++;
-      Serial.print("Appuyé :  ");
-      Serial.println(boutonPushCounter, DEC);
+      hasIncremented = true;
+      lastChange = millis();
+      refreshSleepOriginTimestamp();
+      // Serial.print("Appuyé :  ");
+      // Serial.println(boutonPushCounter, DEC);
     }
     // mémorise l'état courant du bouton poussoir
     lastBoutonState = boutonState;
   }
+
   // affiche voltage de la batterie
   if (boutonPushCounter == 1)
-  { // affiche le voltage
-    char toPrint[50];
-    sprintf(toPrint, "  %.2fV", lipo.getVoltage());
-    screenSendMessage(toPrint, TypeMessage::Small);
+  {
+    if (hasIncremented)
+    {
+      char toPrint[50];
+      sprintf(toPrint, "  %.2fV", lipo.getVoltage());
+      screenSendMessage(toPrint);
+    }
   }
+  // affiche le % de charge de la batterie
   if (boutonPushCounter == 2)
-  { // affiche le % voltage de la batterie
-    char toPrint[50];
-    sprintf(toPrint, "  %.2f %%", lipo.getSOC());
-    screenSendMessage(toPrint, TypeMessage::Small);
+  {
+    if (hasIncremented)
+    {
+      char toPrint[50];
+      sprintf(toPrint, "  %.2f %%", lipo.getSOC());
+      screenSendMessage(toPrint);
+    }
   }
-
+  // nettoyer affichage
   if (boutonPushCounter == 3)
   {
     boutonPushCounter = 0;
     clearScreen();
+  }
+
+  hasIncremented = false;
+
+  long elapseTime = millis() - lastChange;
+
+  if (DISPLAY_DURATION < elapseTime)
+  {
+    boutonPushCounter = 0;
   }
 }
