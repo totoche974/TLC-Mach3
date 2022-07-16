@@ -2,11 +2,6 @@
  * @file main.cpp
  * @author Gaston, Frozar, Gilles
  * @brief Télécommande bluetooth pour mach3
- * @version 0.1
- * @date 2020-12-10
- *
- * @copyright Copyright (c) 2020
- *
  */
 
 #include <Arduino.h>
@@ -80,7 +75,7 @@ void setup()
   digitalWrite(PIN_LED_LIPO_ALERT, LOW);
 
   pinMode(PIN_BT_VISU_CHARGE_LIPO, INPUT_PULLUP);
-  //digitalWrite(PIN_BT_VISU_CHARGE_LIPO, HIGH);
+  // digitalWrite(PIN_BT_VISU_CHARGE_LIPO, HIGH);
 
   initSleep();
 

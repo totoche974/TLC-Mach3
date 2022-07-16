@@ -10,7 +10,7 @@
  *
  */
 const int SLEEP_THRESHOLD = 5 * 60 * 1000; // 5 minutes
-// const int SLEEP_THRESHOLD = 10000; // test 3 secondes
+// const int SLEEP_THRESHOLD = 3000; // test 3 secondes
 
 ulong lastActivityTimestamp = 0;
 
@@ -67,6 +67,7 @@ void shouldSleep()
   if (SLEEP_THRESHOLD < elapseTime)
   {
     clearScreen();
+    digitalWrite(PIN_LED_LIPO_ALERT, LOW);
 
     printf("START SLEEP\n");
     Serial.flush();

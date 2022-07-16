@@ -1,8 +1,11 @@
+/**
+ * @file commandClavier.cpp
+ */
+
 #include <Arduino.h>
 #include <Keypad.h>
 #include <BleKeyboard.h>
 #include <Keypad_I2C.h>
-//#include "WiFi.h"
 
 #include "commandClavier.h"
 
