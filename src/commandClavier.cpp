@@ -210,15 +210,20 @@ void Command_F(char key)
 boolean tempoActive = false;
 unsigned long tempoDepart;
 #define THRESHOLD_SHORT_HOLD_TIME 300 // Durée minimum de l'appui sur le bouton
-const uint8_t NB_AUTORISED_BUTTON = 1;
-char authorisedBouton[NB_AUTORISED_BUTTON] = {'0'};
+const uint8_t NB_SHORT_LONG_PRESS_KEY = 1;
+char listShortLongKey[NB_SHORT_LONG_PRESS_KEY] = {'0'};
 
-bool isAuthoriseKey(char key)
+// Dans le cas où on souhaite ajouter la touche '1' pour qu'elle
+// gère appui court / appui long.
+// const uint8_t NB_SHORT_LONG_PRESS_KEY = 2;
+// char listShortLongKey[NB_SHORT_LONG_PRESS_KEY] = {'0', '1'};
+
+bool doesKeyManageShortLongPress(char key)
 {
   bool found = false;
-  for (int i = 0; i < NB_AUTORISED_BUTTON; ++i)
+  for (int i = 0; i < NB_SHORT_LONG_PRESS_KEY; ++i)
   {
-    if (authorisedBouton[i] == key)
+    if (listShortLongKey[i] == key)
     {
       found = true;
       break;
@@ -281,14 +286,14 @@ shortPressedResult isShortPressed()
   return res;
 }
 
-// Manage different behavior of the '0' key of the keyboard.
-// If the press on the '0' key is short => RaZ XY = 0
-// Else => RaZ the current selected axe
-void managePressBoutonShortLong()
+/**
+ * @brief Configure le comportement des touches en appui court / appui long.
+ */
+void manageShortLongPressKey()
 {
   // Sanity check
   char key = keypad.key[0].kchar;
-  if ((keypad.getState() == IDLE) || (!isAuthoriseKey(key)))
+  if ((keypad.getState() == IDLE) || (!doesKeyManageShortLongPress(key)))
   {
     return;
   }
@@ -301,92 +306,114 @@ void managePressBoutonShortLong()
 
   bool isShortPressed = resultIsShortPressed.isShort;
 
+  // Cas de l'appui court
   if (isShortPressed)
   {
     switch (key)
     {
+      // Remise à zéro des axes XY
     case '0':
+    {
       Command_0(key);
       refreshSleepOriginTimestamp();
-      break; // Remise à zéro des axes XYZ
+      break;
+    }
+      // Dans le cas où on souhaite ajouter la touche '1' pour qu'elle
+      // gère appui court / appui long.
+      // case '1':
+      // {
+      //   break;
+      // }
+    }
+  }
 
-    } // Fin du swich
-  }   // Fin du if
-
-  else if ((key == '0'))
+  // Cas de l'appui long
+  else
   {
-    String toPrint = "Raz ";
-    switch (getCurrentAxe())
+    switch (key)
     {
-    case Axe_x:
+      // Remise à zéro de l'axes sélectionné
+    case '0':
     {
-      toPrint += "X = 0";
-      keyboard.press(KEY_LEFT_CTRL);
-      keyboard.press(KEY_F3);
-      delay(50);
-      keyboard.releaseAll();
+      String toPrint = "Raz ";
+      switch (getCurrentAxe())
+      {
+      case Axe_x:
+      {
+        toPrint += "X = 0";
+        keyboard.press(KEY_LEFT_CTRL);
+        keyboard.press(KEY_F3);
+        delay(50);
+        keyboard.releaseAll();
+        break;
+      }
+      case Axe_y:
+      {
+        toPrint += "Y = 0";
+        keyboard.press(KEY_LEFT_CTRL);
+        keyboard.press(KEY_F4);
+        delay(50);
+        keyboard.releaseAll();
+        break;
+      }
+      case Axe_z:
+      {
+        toPrint += "Z = 0";
+        keyboard.press(KEY_LEFT_CTRL);
+        keyboard.press(KEY_F5);
+        delay(50);
+        keyboard.releaseAll();
+        break;
+      }
+      case Axe_a:
+      {
+        toPrint += "A = 0";
+        keyboard.press(KEY_LEFT_CTRL);
+        keyboard.press(KEY_F6);
+        delay(50);
+        keyboard.releaseAll();
+        break;
+      }
+      }
+      screenSendMessage(toPrint);
+      refreshSleepOriginTimestamp();
       break;
     }
-    case Axe_y:
-    {
-      toPrint += "Y = 0";
-      keyboard.press(KEY_LEFT_CTRL);
-      keyboard.press(KEY_F4);
-      delay(50);
-      keyboard.releaseAll();
-      break;
-    }
-    case Axe_z:
-    {
-      toPrint += "Z = 0";
-      keyboard.press(KEY_LEFT_CTRL);
-      keyboard.press(KEY_F5);
-      delay(50);
-      keyboard.releaseAll();
-      break;
-    }
-    case Axe_a:
-    {
-      toPrint += "A = 0";
-      keyboard.press(KEY_LEFT_CTRL);
-      keyboard.press(KEY_F6);
-      delay(50);
-      keyboard.releaseAll();
-      break;
-    }
-    }
-    screenSendMessage(toPrint);
-    refreshSleepOriginTimestamp();
-  } // fin du else
 
-} // Fin de la fonction
+      // Dans le cas où on souhaite ajouter la touche '1' pour qu'elle
+      // gère appui court / appui long.
+      // case '1':
+      // {
+      //   break;
+      // }
+    }
+  }
+}
 
-void runCommandClavier()
+/**
+ * @brief Configure le comportement des touches qui sont protégées par
+ *        le bouton de sécurité.
+ */
+void manageKeyProtectedBySecurityButton()
 {
-  char key = keypad.getKey();
-
-  managePressBoutonShortLong();
-
-  if (key == 'E')
-  {
-    Command_E(key);
-    refreshSleepOriginTimestamp();
-  }
-
-  if (key == 'F')
-  {
-    Command_F(key);
-    refreshSleepOriginTimestamp();
-  }
-
   if ((digitalRead(PIN_SECU_BT) == LOW))
   {
+    char key = keypad.getKey();
     if (key)
     {
       Serial.println(key);
     }
     switch (key)
     {
+      // La touche '0' gère des appuis courts / appuis longs.
+      // case '0':
+      //   Command_0(key);
+      //   refreshSleepOriginTimestamp();
+      //   break;
+
+      // Dans le cas où on souhaite ajouter la touche '1' pour qu'elle
+      // gère appui court / appui long.
+      // Il faut commenter le case '1'
     case '1':
       Command_1(key);
       refreshSleepOriginTimestamp();
@@ -440,20 +467,24 @@ void runCommandClavier()
       Command_D(key);
       refreshSleepOriginTimestamp();
       break;
-      // case 'E':
-      //   Command_E(key);
-      //   refreshSleepOriginTimestamp();
-      //   break;
-      // case 'F':
-      //   Command_F(key);
-      //   refreshSleepOriginTimestamp();
-      //   break;
+    case 'E':
+      Command_E(key);
+      refreshSleepOriginTimestamp();
+      break;
+    case 'F':
+      Command_F(key);
+      refreshSleepOriginTimestamp();
+      break;
       // default:
       //   Serial.print("DEFAULT key = ");
       //   Serial.println(key);
       //   break;
-
-    } // fin du switch
+    }
   }
+}
 
-} // Fin de la fonction
+void runCommandClavier()
+{
+  manageShortLongPressKey();
+  manageKeyProtectedBySecurityButton();
+}

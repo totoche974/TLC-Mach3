@@ -108,19 +108,49 @@ void boutonVisuChargeLipo()
     lastBoutonState = boutonState;
   }
 
-  // affiche voltage de la batterie
-  if (boutonPushCounter == 1)
+  // // affiche voltage de la batterie
+  // if (boutonPushCounter == 1)
+  // {
+  //   if (hasIncremented)
+  //   {
+  //     char toPrint[50];
+  //     sprintf(toPrint, "  %.2fV", lipo.getVoltage());
+  //     screenSendMessage(toPrint);
+  //   }
+  // }
+
+  // // affiche le % de charge de la batterie
+  // if (boutonPushCounter == 2)
+  // {
+  //   if (hasIncremented)
+  //   {
+  //     char toPrint[50];
+  //     sprintf(toPrint, "  %.2f %%", lipo.getSOC());
+  //     screenSendMessage(toPrint);
+  //   }
+  // }
+  // // nettoyer affichage
+  // if (boutonPushCounter == 3)
+  // {
+  //   boutonPushCounter = 0;
+  //   clearScreen();
+  // }
+
+  switch (boutonPushCounter)
   {
-    if (hasIncremented)
+  case 1:
+    // affiche voltage de la batterie
     {
-      char toPrint[50];
-      sprintf(toPrint, "  %.2fV", lipo.getVoltage());
-      screenSendMessage(toPrint);
+      if (hasIncremented)
+      {
+        char toPrint[50];
+        sprintf(toPrint, "  %.2fV", lipo.getVoltage());
+        screenSendMessage(toPrint);
+      }
     }
-  }
-  // affiche le % de charge de la batterie
-  if (boutonPushCounter == 2)
+  case 2:
   {
+    // affiche le % de charge de la batterie
     if (hasIncremented)
     {
       char toPrint[50];
@@ -128,11 +158,12 @@ void boutonVisuChargeLipo()
       screenSendMessage(toPrint);
     }
   }
-  // nettoyer affichage
-  if (boutonPushCounter == 3)
+  case 3:
   {
+    // nettoyer affichage
     boutonPushCounter = 0;
     clearScreen();
+  }
   }
 
   hasIncremented = false;
