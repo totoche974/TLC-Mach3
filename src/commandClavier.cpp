@@ -470,19 +470,26 @@ void manageKeyProtectedBySecurityButton()
       Command_D(key);
       refreshSleepOriginTimestamp();
       break;
-    case 'E':
-      Command_E(key);
-      refreshSleepOriginTimestamp();
-      break;
-    case 'F':
-      Command_F(key);
-      refreshSleepOriginTimestamp();
-      break;
       // default:
       //   Serial.print("DEFAULT key = ");
       //   Serial.println(key);
       //   break;
     }
+  } // fin du if
+
+  char key = keypad.getKey();
+  switch (key)
+  {
+  case 'E':
+    Command_E(key);
+    refreshSleepOriginTimestamp();
+    screenSendMessage("Rapide"); // Déplacement rapide
+    break;
+  case 'F':
+    Command_F(key);
+    refreshSleepOriginTimestamp();
+    screenSendMessage("Pas a pas"); // Déplacement par pas
+    break;
   }
 }
 
