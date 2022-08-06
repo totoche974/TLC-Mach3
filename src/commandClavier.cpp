@@ -192,14 +192,16 @@ void Command_E(char key)
 {
   Serial.print("key = ");
   Serial.println(key);
-  screenSendMessage("E: Not used");
+  screenSendMessage("Pas a pas"); // Déplacement pas a pas
+  keyboard.press(KEY_LEFT_CTRL); // touche CTRL
 }
 
 void Command_F(char key)
 {
   Serial.print("key = ");
   Serial.println(key);
-  screenSendMessage("F: Not used");
+  screenSendMessage("Dep.Rapide"); // Déplacement rapide
+  keyboard.press(KEY_RIGHT_SHIFT); // touche MAJ
 }
 
 /**
@@ -483,12 +485,10 @@ void manageKeyProtectedBySecurityButton()
   case 'E':
     Command_E(key);
     refreshSleepOriginTimestamp();
-    screenSendMessage("Rapide"); // Déplacement rapide
     break;
   case 'F':
     Command_F(key);
     refreshSleepOriginTimestamp();
-    screenSendMessage("Pas a pas"); // Déplacement par pas
     break;
   }
 }
