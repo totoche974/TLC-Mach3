@@ -121,25 +121,25 @@ void Command_7(char key)
   keyboard.release(KEY_F2); // touche F2
 }
 
-void Command_8(char key)
+void Command_8(char key) // touche F8 - Choix du pas :2mm,1mm,0.5mm,0.25mm,0.1mm,0.01mmmm,0.001mm,0.0001mm
 {
   Serial.print("key = ");
   Serial.println(key);
   screenSendMessage("Select Pas");
-  keyboard.press(KEY_F8);
+  keyboard.press(KEY_F8); // touche F8
   delay(50);
-  keyboard.release(KEY_F8); // touche F8
+  keyboard.release(KEY_F8);
 }
 
-void Command_9(char key)
+void Command_9(char key) // touche Ctrl + touche "J" - choix du mode : pas à pas, continu, mpg
 {
   Serial.print("key = ");
   Serial.println(key);
   screenSendMessage("Mod. manuel");
-  keyboard.press(KEY_LEFT_CTRL);
-  keyboard.write(74);
+  keyboard.press(KEY_LEFT_CTRL); // touche Ctrl
+  keyboard.write(74);            // touche "J"
   delay(50);
-  keyboard.releaseAll(); // touche Ctrl + touche "J"
+  keyboard.releaseAll();
 }
 
 void Command_0(char key)
@@ -193,7 +193,7 @@ void Command_E(char key)
   Serial.print("key = ");
   Serial.println(key);
   screenSendMessage("Pas a pas"); // Déplacement pas a pas
-  keyboard.press(KEY_LEFT_CTRL); // touche CTRL
+  keyboard.press(KEY_LEFT_CTRL);  // touche CTRL
 }
 
 void Command_F(char key)
@@ -447,11 +447,11 @@ void manageKeyProtectedBySecurityButton()
       Command_7(key);
       refreshSleepOriginTimestamp();
       break;
-    case '8':
+    case '8': // increment pas
       Command_8(key);
       refreshSleepOriginTimestamp();
       break;
-    case '9':
+    case '9': // Mode manuel 
       Command_9(key);
       refreshSleepOriginTimestamp();
       break;
